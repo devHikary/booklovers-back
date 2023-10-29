@@ -38,7 +38,7 @@ module.exports = {
       const {
         user_id,
         book_id,
-        page_read,
+        pages_read,
         progress,
         rating,
         review,
@@ -66,7 +66,7 @@ module.exports = {
         id,
         user_id,
         book_id,
-        page_read,
+        pages_read,
         progress,
         rating,
         review,
@@ -92,7 +92,7 @@ module.exports = {
     try {
       const {
         id,
-        page_read,
+        pages_read,
         progress,
         rating,
         review,
@@ -108,7 +108,7 @@ module.exports = {
         return res.status(400).json({ error: "Cadastro não encontrado" });
 
       annotation.update({
-        page_read,
+        pages_read,
         progress,
         rating,
         review,

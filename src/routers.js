@@ -46,7 +46,7 @@ routes.post('/authors', middlewares.verifyToken, AuthorController.create);
 
 routes.get('/themes', middlewares.verifyToken, ThemeController.getAll);
 routes.post('/themes', middlewares.verifyToken, ThemeController.create);
-routes.get('/themes/:id', middlewares.verifyToken, ThemeController.getById);
+routes.get('/themes/:id/u/:user_id', middlewares.verifyToken, ThemeController.getById);
 
 routes.get('/lists', middlewares.verifyToken, ListController.getAll);
 routes.post('/lists', middlewares.verifyToken, ListController.create);
