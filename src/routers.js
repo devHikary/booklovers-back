@@ -28,6 +28,7 @@ routes.post('/goals', GoalController.create);
 routes.get('/books', BookController.getAll);
 routes.post('/books', BookController.create);
 routes.put('/books', BookController.update);
+routes.get('/books/:id', BookController.getById);
 
 routes.get('/annotations', AnnotationController.getAll);
 routes.post('/annotations', AnnotationController.create);

@@ -7,7 +7,13 @@ const Theme = require("../models/Theme");
 module.exports = {
   async getAll(req, res) {
     try {
-      const books = await Book.findAll();
+      const books = await Book.findAll({ include: {
+        model: Author, 
+        attributes: ['id','name'], 
+        through: { 
+          attributes: []
+        }
+      }});
 
       return res.json(books);
     } catch (err) {
@@ -171,6 +177,23 @@ module.exports = {
       return res.json(book);
     } catch (err) {
       console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async getById(req, res) {
+    try {
+      const {id} = req.params;
+      const book = await Book.findByPk(id,{ include: {
+        model: Author, 
+        attributes: ['id','name'], 
+        through: { 
+          attributes: []
+        }
+      }});
+
+      return res.json(book);
+    } catch (err) {
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
