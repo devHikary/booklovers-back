@@ -1,5 +1,5 @@
 const Book = require("../models/Book");
-const { DataTypes } = require("sequelize");
+const { DataTypes, Op } = require("sequelize");
 const crypto = require("crypto");
 const Author = require("../models/Author");
 const Theme = require("../models/Theme");
@@ -7,13 +7,15 @@ const Theme = require("../models/Theme");
 module.exports = {
   async getAll(req, res) {
     try {
-      const books = await Book.findAll({ include: {
-        model: Author, 
-        attributes: ['id','name'], 
-        through: { 
-          attributes: []
-        }
-      }});
+      const books = await Book.findAll({
+        include: {
+          model: Author,
+          attributes: ["id", "name"],
+          through: {
+            attributes: [],
+          },
+        },
+      });
 
       return res.json(books);
     } catch (err) {
@@ -73,7 +75,7 @@ module.exports = {
             },
           });
           if (author.id === null && created) author.id = id;
-          if(!created) author.id = aObject.id;
+          if (!created) author.id = aObject.id;
 
           arr_author_id.push(author.id);
         }
@@ -91,7 +93,7 @@ module.exports = {
             },
           });
           if (theme.id === null && created) theme.id = id;
-          if(!created) theme.id = tObject.id;
+          if (!created) theme.id = tObject.id;
 
           arr_theme_id.push(theme.id);
         }
@@ -149,7 +151,7 @@ module.exports = {
             },
           });
           if (author.id === null && created) author.id = id;
-          if(!created) author.id = aObject.id;
+          if (!created) author.id = aObject.id;
 
           arr_author_id.push(author.id);
         }
@@ -167,7 +169,7 @@ module.exports = {
             },
           });
           if (theme.id === null && created) theme.id = id;
-          if(!created) theme.id = tObject.id;
+          if (!created) theme.id = tObject.id;
 
           arr_theme_id.push(theme.id);
         }
@@ -183,25 +185,63 @@ module.exports = {
 
   async getById(req, res) {
     try {
-      const {id} = req.params;
-      const book = await Book.findByPk(id,{ include: [{
-        model: Author, 
-        attributes: ['id','name'], 
-        through: { 
-          attributes: []
-        }
-      },
-      {
-        model: Theme, 
-        attributes: ['id','name'], 
-        through: { 
-          attributes: []
-        }
-      },
-    ]
+      const { id } = req.params;
+      const book = await Book.findByPk(id, {
+        include: [
+          {
+            model: Author,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Theme,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
       });
 
       return res.json(book);
+    } catch (err) {
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async getByTitle(req, res) {
+    try {
+      const { title } = req.params;
+      const query = `%${title}%`;
+
+      title.replace("%20", "%");
+      console.log(title);
+
+      const books = await Book.findAll(
+        {
+          where: { title: { [Op.like]: query } },
+          include: [
+            {
+              model: Author,
+              attributes: ["id", "name"],
+              through: {
+                attributes: [],
+              },
+            },
+            {
+              model: Theme,
+              attributes: ["id", "name"],
+              through: {
+                attributes: [],
+              },
+            },
+          ],
+        }
+      );
+
+      return res.json(books);
     } catch (err) {
       return res.status(400).json({ error: "Cadastro incorreto" });
     }

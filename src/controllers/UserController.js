@@ -10,6 +10,7 @@ module.exports = {
 
       return res.json(users);
     } catch (err) {
+      console.log(err)
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
@@ -19,12 +20,11 @@ module.exports = {
       const { username, role_id, name, email, password } = req.body;
       const id = crypto.randomUUID();
 
-      const email_aux = await Goal.findOne({
+      const email_aux = await User.findOne({
         where: {
           email: email,
         },
-      });
-      console.log("----- ", name_aux);
+      }).catch();
   
       if (email_aux)
         return res.status(400).json({ error: "E-mail já cadastrado" });
@@ -46,6 +46,7 @@ module.exports = {
 
       return res.json(user);
     } catch (err) {
+      console.log(err)
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },

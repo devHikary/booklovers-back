@@ -1,1 +1,3 @@
 /src/config/database.js
+.env
+.env.example

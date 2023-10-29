@@ -40,4 +40,38 @@ module.exports = {
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
+
+  async getById(req, res) {
+    try {
+      const { id } = req.params;
+
+      const books = await Book.findAll(
+        {
+          include: [
+            {
+              model: Author,
+              attributes: ["id", "name"],
+              through: {
+                attributes: [],
+              },
+            },
+            {
+              model: Theme,
+              attributes: ["id", "name"],
+              where: {id: id},
+              through: {
+                attributes: [],
+              },
+            },
+          ],
+        }
+      );
+
+
+      return res.json(books);
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
 };
