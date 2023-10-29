@@ -10,42 +10,63 @@ module.exports = {
   },
 
   async create(req, res) {
-    const { name, permissions } = req.body;
+    try {
+      const { name, permissions } = req.body;
 
-    const name_aux = await Role.findOne({
-      where: {
-        name: name,
-      },
-    });
-    console.log("----- ", name_aux);
-
-    if (name_aux)
-      return res.status(400).json({ error: "Registro duplicado" });
-
-    const selects = permissions.map((row) => selectAsync(row));
-
-    Promise.all(selects)
-      .then(async () => {
-        const id = crypto.randomUUID();
-        const role = await Role.create({ id, name });
-
-        permissions.forEach(async (permission_id) => {
-          const p = await Permission.findByPk(permission_id);
-
-          const result = await p.addRole(role);
-        });
-        return res.json(role);
-      })
-      .catch(() => {
-        return res.status(400).json({ error: "Permission not found" });
+      const name_aux = await Role.findOne({
+        where: {
+          name: name,
+        },
       });
-  },
-};
+      
+      if (name_aux)
+        return res.status(400).json({ error: "Registro duplicado" });
 
-function selectAsync(cod) {
-  return new Promise(async (res, rej) => {
-    const p = await Permission.findByPk(cod);
-    if (!p) rej("not found!");
-    res("ok");
-  });
-}
+      var role = new Role();
+      var p = new Permission();
+      if (permissions.length > 0) {
+        const id = crypto.randomUUID();
+        role = await Role.create({ id, name });
+        for (const perm of permissions) {
+          p = await Permission.findByPk(perm).catch(() => {
+                return res.status(400).json({ error: "Permission not found" });
+              });;
+          const result = await p.addRole(role);
+        }
+      }
+
+      return res.json(role);
+    } catch (err) {
+      console.log(err)
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+  async update(req, res) {
+    try {
+      const { id, name, permissions } = req.body;
+
+      const name_aux = await Role.findOne({
+        where: {
+          name: name,
+        },
+      });
+      
+      if (name_aux && id != name_aux.id)
+        return res.status(400).json({ error: "Registro duplicado" });
+
+      const role = await Role.findByPk(id).catch((err) => {
+        return res.status(400).json({ error: "Usuário não existe" });
+      });
+
+      await role.update({ id, name });
+
+      await role.setPermissions(permissions);
+      
+      return res.json(role);
+    } catch (err) {
+      console.log(err)
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+};

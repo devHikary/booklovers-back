@@ -29,6 +29,15 @@ module.exports = {
       if (email_aux)
         return res.status(400).json({ error: "E-mail já cadastrado" });
 
+      const username_aux = await User.findOne({
+        where: {
+          username: username,
+        },
+      }).catch();
+  
+      if (username_aux)
+        return res.status(400).json({ error: "Username já cadastrado" });
+
       const role = await Role.findByPk(role_id);
 
       if (!role) {
