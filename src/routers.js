@@ -27,11 +27,12 @@ routes.put('/roles', middlewares.verifyToken, RoleController.update);
 routes.get('/goals', middlewares.verifyToken, GoalController.getAll);
 routes.post('/goals', middlewares.verifyToken, GoalController.create);
 
-routes.get('/books', middlewares.verifyToken, BookController.getAll);
+routes.get('/books/:user_id', middlewares.verifyToken, BookController.getAll);
 routes.post('/books',middlewares.verifyToken,  BookController.create);
 routes.put('/books', middlewares.verifyToken, BookController.update);
-routes.get('/books/:id', middlewares.verifyToken, BookController.getById);
-routes.get('/books/title/:title', middlewares.verifyToken, BookController.getByTitle);
+routes.get('/books/id/:id', middlewares.verifyToken, BookController.getById);
+routes.get('/books/:id/u/:user_id', middlewares.verifyToken, BookController.getByIdUser);
+routes.get('/books/title/:title/u/:user_id', middlewares.verifyToken, BookController.getByTitle);
 
 routes.get('/annotations', middlewares.verifyToken, AnnotationController.getAll);
 routes.post('/annotations', middlewares.verifyToken, AnnotationController.create);

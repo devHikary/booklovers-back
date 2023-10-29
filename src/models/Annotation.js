@@ -19,8 +19,8 @@ class Annotation extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.User, { foreignKey: 'user_id'});
-    this.belongsTo(models.Book, { foreignKey: 'book_id'});
+    this.belongsTo(models.User, { foreignKey: 'user_id' });
+    this.belongsTo(models.Book, { foreignKey: 'book_id' });
     this.belongsToMany(models.Tag, { foreignKey: 'annotation_id', through: 'annotation_tag', as:'tags' });
   }
 }

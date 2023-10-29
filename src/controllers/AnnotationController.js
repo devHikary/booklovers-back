@@ -7,17 +7,28 @@ const Tag = require("../models/Tag");
 module.exports = {
   async getAll(req, res) {
     try {
-      const annotation = await Annotation.findAll({ include: {
-        association: 'tags', 
-        attributes: ['id','name'], 
-        through: { 
-          attributes: []
-        }
-      }});
+      const annotation = await Annotation.findAll({
+        include: [
+          {
+            association: "tags",
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Book,
+            // attributes: ["id", "title"],
+            // through: {
+            //   attributes: [],
+            // },
+          },
+        ],
+      });
 
       return res.json(annotation);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
@@ -34,15 +45,15 @@ module.exports = {
         date_start,
         date_end,
         favorite,
-        tags
+        tags,
       } = req.body;
 
       const id = crypto.randomUUID();
 
       const book = await Book.findByPk(book_id);
 
-      if (book) {
-        return res.status(400).json({ error: "Registro duplicado" });
+      if (!book) {
+        return res.status(400).json({ error: "Livro inválido" });
       }
 
       const user = await User.findByPk(user_id);
@@ -64,11 +75,10 @@ module.exports = {
         favorite,
       });
 
-      if(tags.length > 0)
-      {
-        tags.forEach(async tag =>{
+      if (tags) {
+        for (let tag of tags) {
           await annotation.addTag(tag);
-        })
+        }
       }
 
       return res.json(annotation);
@@ -82,7 +92,6 @@ module.exports = {
     try {
       const {
         id,
-        user_id,
         page_read,
         progress,
         rating,
@@ -108,20 +117,17 @@ module.exports = {
         favorite,
       });
 
-      if(tags.length > 0)
-      {
-        tags.forEach(async t =>{
-          if(t.selected){
+      if (tags) {
+        tags.forEach(async (t) => {
+          if (t.selected) {
             await annotation.addTag(t.id);
-          }
-          else
-            await annotation.removeTag(t.id);
-        })
+          } else await annotation.removeTag(t.id);
+        });
       }
 
       return res.json(annotation);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },

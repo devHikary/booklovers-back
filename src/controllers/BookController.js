@@ -1,12 +1,17 @@
 const Book = require("../models/Book");
-const { DataTypes, Op } = require("sequelize");
+const { DataTypes, Op, where } = require("sequelize");
 const crypto = require("crypto");
 const Author = require("../models/Author");
 const Theme = require("../models/Theme");
+const Annotation = require("../models/Annotation");
+const annotations = require("../models/Annotation");
+const Tag = require("../models/Tag");
 
 module.exports = {
   async getAll(req, res) {
     try {
+      const{user_id} = req.params;
+      const result = [];
       const books = await Book.findAll({
         include: {
           model: Author,
@@ -17,7 +22,30 @@ module.exports = {
         },
       });
 
-      return res.json(books);
+      for(let book of books){
+        const annotation = await Annotation.findOne(
+          {
+            attributes: ["id","pages_read", "progress", "rating", "review", "date_start", "date_end", "favorite"],
+            where: {
+              [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
+            },
+          },
+          {
+            include: [
+              {
+                model: Tag,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          }
+        );
+        result.push({book: book, annotation: annotation})
+      }
+
+      return res.json(result);
     } catch (err) {
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
@@ -207,6 +235,55 @@ module.exports = {
 
       return res.json(book);
     } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async getByIdUser(req, res) {
+    try {
+      const { id, user_id } = req.params;
+      const book = await Book.findByPk(id, {
+        include: [
+          {
+            model: Author,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Theme,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
+      const annotation = await Annotation.findOne(
+        {
+          attributes: ["id","pages_read", "progress", "rating", "review", "date_start", "date_end", "favorite"],
+          where: {
+            [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
+          },
+        },
+        {
+          include: [
+            {
+              model: Tag,
+              attributes: ["id", "name"],
+              through: {
+                attributes: [],
+              },
+            },
+          ],
+        }
+      );
+        console.log("*****")
+      return res.json({book, annotation});
+    } catch (err) {
+      console.log(err);
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
@@ -219,27 +296,25 @@ module.exports = {
       title.replace("%20", "%");
       console.log(title);
 
-      const books = await Book.findAll(
-        {
-          where: { title: { [Op.like]: query } },
-          include: [
-            {
-              model: Author,
-              attributes: ["id", "name"],
-              through: {
-                attributes: [],
-              },
+      const books = await Book.findAll({
+        where: { title: { [Op.like]: query } },
+        include: [
+          {
+            model: Author,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
             },
-            {
-              model: Theme,
-              attributes: ["id", "name"],
-              through: {
-                attributes: [],
-              },
+          },
+          {
+            model: Theme,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
             },
-          ],
-        }
-      );
+          },
+        ],
+      });
 
       return res.json(books);
     } catch (err) {

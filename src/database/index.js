@@ -12,6 +12,7 @@ const List = require('../models/List');
 const ListBook = require('../models/ListBook');
 const Author = require('../models/Author');
 const Theme = require('../models/Theme');
+const annotations = require('../models/Annotation');
 
 const connection = new Sequelize(dbConfig);
 

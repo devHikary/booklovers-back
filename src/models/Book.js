@@ -19,7 +19,7 @@ class Book extends Model {
     );
   }
   static associate(models) {
-    this.belongsToMany(models.Annotation, { foreignKey: 'book_id', through: 'annotations' });
+    this.belongsToMany(models.Annotation, { foreignKey: 'book_id', through: 'annotations'});
     this.belongsToMany(models.List, { foreignKey: 'book_id', through: 'list_book' });
     this.belongsToMany(models.Author, { foreignKey: 'book_id', through: 'author_book' });
     this.belongsToMany(models.Theme, { foreignKey: 'book_id', through: 'theme_book' });
