@@ -77,20 +77,19 @@ module.exports = {
             where: {
               [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
             },
-          },
-          {
             include: [
               {
-                model: Tag,
+                association: 'tags',
                 attributes: ["id", "name"],
                 through: {
                   attributes: [],
                 },
               },
             ],
-          }
+          },
         );
-        result.push({book: book, annotation: annotation})
+        if(annotation)
+          result.push({book: book, annotation: annotation})
       }
 
 

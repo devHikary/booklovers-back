@@ -92,6 +92,7 @@ module.exports = {
     try {
       const {
         id,
+        user_id,
         pages_read,
         progress,
         rating,
@@ -117,12 +118,23 @@ module.exports = {
         favorite,
       });
 
+      let arr_tag_id = []
       if (tags) {
-        tags.forEach(async (t) => {
-          if (t.selected) {
-            await annotation.addTag(t.id);
-          } else await annotation.removeTag(t.id);
-        });
+        for (const tag of tags) {
+          const id = crypto.randomUUID();
+          const [aObject, created] = await Tag.findOrCreate({
+            where: { name: tag.name },
+            defaults: {
+              id: id,
+              user_id: user_id
+            },
+          });
+          if (tag.id === null && created) tag.id = id;
+          if (!created) tag.id = aObject.id;
+
+          arr_tag_id.push(tag.id);
+        }
+        await annotation.setTags(arr_tag_id);
       }
 
       return res.json(annotation);

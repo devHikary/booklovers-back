@@ -32,14 +32,19 @@ routes.post('/books',middlewares.verifyToken,  BookController.create);
 routes.put('/books', middlewares.verifyToken, BookController.update);
 routes.get('/books/id/:id', middlewares.verifyToken, BookController.getById);
 routes.get('/books/:id/u/:user_id', middlewares.verifyToken, BookController.getByIdUser);
-routes.get('/books/title/:title/u/:user_id', middlewares.verifyToken, BookController.getByTitle);
+// routes.get('/books/title/:title/u/:user_id', middlewares.verifyToken, BookController.getByTitle);
+routes.get('/books/title/t', middlewares.verifyToken, BookController.getByTitle);
 
 routes.get('/annotations', middlewares.verifyToken, AnnotationController.getAll);
 routes.post('/annotations', middlewares.verifyToken, AnnotationController.create);
 routes.put('/annotations', middlewares.verifyToken, AnnotationController.update);
 
 routes.get('/tags', middlewares.verifyToken, TagController.getAll);
+routes.get('/tags/user/:user_id', middlewares.verifyToken, TagController.getAllUser);
 routes.post('/tags', middlewares.verifyToken, TagController.create);
+routes.put('/tags', middlewares.verifyToken, TagController.update);
+routes.delete('/tags/:id', middlewares.verifyToken, TagController.delete);
+routes.get('/tags/:id/u/:user_id', middlewares.verifyToken, TagController.getById);
 
 routes.get('/authors', middlewares.verifyToken, AuthorController.getAll);
 routes.post('/authors', middlewares.verifyToken, AuthorController.create);
@@ -48,10 +53,13 @@ routes.get('/themes', middlewares.verifyToken, ThemeController.getAll);
 routes.post('/themes', middlewares.verifyToken, ThemeController.create);
 routes.get('/themes/:id/u/:user_id', middlewares.verifyToken, ThemeController.getById);
 
-routes.get('/lists', middlewares.verifyToken, ListController.getAll);
+routes.get('/lists/myl/:user_id', middlewares.verifyToken, ListController.getAll);
+routes.get('/lists/myb/:user_id', middlewares.verifyToken, ListController.getAllBooks);
 routes.post('/lists', middlewares.verifyToken, ListController.create);
-routes.post('/lists/:id', middlewares.verifyToken, ListController.pushBook);
+// routes.put('/lists', middlewares.verifyToken, ListController.update);
+routes.post('/lists/book/', middlewares.verifyToken, ListController.pushBook);
 routes.get('/lists/:id', middlewares.verifyToken, ListController.getBooks);
+routes.delete('/lists/:id', middlewares.verifyToken, ListController.delete);
 
 routes.post('/login', LoginController.auth);
 

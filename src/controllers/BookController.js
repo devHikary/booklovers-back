@@ -267,18 +267,16 @@ module.exports = {
           where: {
             [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
           },
-        },
-        {
           include: [
             {
-              model: Tag,
+              association: 'tags',
               attributes: ["id", "name"],
               through: {
                 attributes: [],
               },
             },
           ],
-        }
+        },
       );
         console.log("*****")
       return res.json({book, annotation});
@@ -290,12 +288,14 @@ module.exports = {
 
   async getByTitle(req, res) {
     try {
-      const { title } = req.params;
+      const title = req.query.t;
+      const user_id = req.query.u;
+      const result = [];
+
       const query = `%${title}%`;
 
       title.replace("%20", "%");
-      console.log(title);
-
+ 
       const books = await Book.findAll({
         where: { title: { [Op.like]: query } },
         include: [
@@ -316,8 +316,32 @@ module.exports = {
         ],
       });
 
-      return res.json(books);
+      for(let book of books){
+        const annotation = await Annotation.findOne(
+          {
+            attributes: ["id","pages_read", "progress", "rating", "review", "date_start", "date_end", "favorite"],
+            where: {
+              [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
+            },
+          },
+          {
+            include: [
+              {
+                model: Tag,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          }
+        );
+        result.push({book: book, annotation: annotation})
+      }
+
+      return res.json(result);
     } catch (err) {
+      console.log(err)
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
