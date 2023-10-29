@@ -6,7 +6,7 @@ const Theme = require("../models/Theme");
 module.exports = {
   async getAll(req, res) {
     try {
-      const theme = await Theme.findAll();
+      const theme = await Theme.findAll({attributes: ['id','name']});
 
       return res.json(theme);
     } catch (err) {

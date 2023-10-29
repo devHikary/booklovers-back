@@ -4,7 +4,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.addColumn('books', 
-    'thumbnail_url', { 
+    'thumbnail', { 
       type: Sequelize.STRING,
         allowNull: true,
     });
@@ -12,5 +12,6 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     await queryInterface.removeColumn('books','thumbnail_url');
+    await queryInterface.removeColumn('books','thumbnail');
   }
 };

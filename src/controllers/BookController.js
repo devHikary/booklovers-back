@@ -184,13 +184,22 @@ module.exports = {
   async getById(req, res) {
     try {
       const {id} = req.params;
-      const book = await Book.findByPk(id,{ include: {
+      const book = await Book.findByPk(id,{ include: [{
         model: Author, 
         attributes: ['id','name'], 
         through: { 
           attributes: []
         }
-      }});
+      },
+      {
+        model: Theme, 
+        attributes: ['id','name'], 
+        through: { 
+          attributes: []
+        }
+      },
+    ]
+      });
 
       return res.json(book);
     } catch (err) {

@@ -11,8 +11,7 @@ class Book extends Model {
         pages: DataTypes.INTEGER,
         release_dt: DataTypes.DATE,
         description: DataTypes.TEXT,
-        thumbnail_url: DataTypes.STRING,
-        thumbnail: DataTypes.BLOB,
+        thumbnail: DataTypes.STRING,
       },
       {
         sequelize,
