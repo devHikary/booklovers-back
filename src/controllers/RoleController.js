@@ -9,6 +9,29 @@ module.exports = {
     return res.json(role);
   },
 
+  async getById(req, res) {
+    try {
+      const { id } = req.params;
+      const role = await Role.findByPk(id, {
+        attributes: ["id", "name"],
+        include: [
+          {
+            model: Permission,
+            attributes: ["id", "name", "url"],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
+
+      return res.json(role);
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
   async create(req, res) {
     try {
       const { name, permissions } = req.body;
@@ -18,7 +41,7 @@ module.exports = {
           name: name,
         },
       });
-      
+
       if (name_aux)
         return res.status(400).json({ error: "Registro duplicado" });
 
@@ -29,15 +52,15 @@ module.exports = {
         role = await Role.create({ id, name });
         for (const perm of permissions) {
           p = await Permission.findByPk(perm).catch(() => {
-                return res.status(400).json({ error: "Permission not found" });
-              });;
+            return res.status(400).json({ error: "Permission not found" });
+          });
           const result = await p.addRole(role);
         }
       }
 
       return res.json(role);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
@@ -50,7 +73,7 @@ module.exports = {
           name: name,
         },
       });
-      
+
       if (name_aux && id != name_aux.id)
         return res.status(400).json({ error: "Registro duplicado" });
 
@@ -61,12 +84,27 @@ module.exports = {
       await role.update({ id, name });
 
       await role.setPermissions(permissions);
-      
+
       return res.json(role);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
+  async delete(req, res) {
+    try {
+      const { id } = req.params;
 
+      const role = await Role.findByPk(id).catch((err) => {
+        return res.status(400).json({ error: "Registro não existe" });
+      });
+
+      await role.destroy({ where: { id } });
+
+      return res.json({ msg: "Cadastro excluído" });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
 };

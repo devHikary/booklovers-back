@@ -1,28 +1,96 @@
-const Permission = require('../models/Permission');
-const crypto = require('crypto');
+const Permission = require("../models/Permission");
+const crypto = require("crypto");
 
 module.exports = {
   async getAll(req, res) {
-    const perms = await Permission.findAll();
+    try {
+      const perms = await Permission.findAll({
+        attributes: ["id", "name", "url"],
+      });
 
-    return res.json(perms);
+      return res.json(perms);
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async getById(req, res) {
+    try {
+      const { id } = req.params;
+      const perms = await Permission.findByPk(id);
+
+      return res.json(perms);
+    } catch (error) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
   },
 
   async create(req, res) {
-    const { name, url } = req.body;
+    try {
+      const { name, url } = req.body;
 
-    const name_aux = await Permission.findOne({
-      where: {
-        name: name,
-      },
-    });
+      const name_aux = await Permission.findOne({
+        where: {
+          name: name,
+        },
+      });
 
-    if (name_aux)
-      return res.status(400).json({ error: "Registro duplicado" });
+      if (name_aux)
+        return res.status(400).json({ error: "Registro duplicado" });
 
-    const id = crypto.randomUUID()
-    const perm = await Permission.create({ id, name, url });
+      const id = crypto.randomUUID();
+      const perm = await Permission.create({ id, name, url });
 
-    return res.json(perm);
-  }
+      return res.json(perm);
+    } catch (error) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async update(req, res) {
+    try {
+      const { id, name, url } = req.body;
+
+      const name_aux = await Permission.findOne({
+        where: {
+          name: name,
+        },
+      });
+      
+      if (name_aux && id != name_aux.id)
+        return res.status(400).json({ error: "Registro duplicado" });
+
+      const permis = await Permission.findByPk(id).catch((err) => {
+        return res.status(400).json({ error: "Registro não existe" });
+      });
+
+      await permis.update({ id, name, url });
+      
+      return res.json(permis);
+    } catch (err) {
+      console.log(err)
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async delete(req, res) {
+    try {
+      const { id } = req.params;
+
+
+      const permis = await Permission.findByPk(id).catch((err) => {
+        return res.status(400).json({ error: "Registro não existe" });
+      });
+
+      await permis.destroy({ where: {id} });
+
+      return res.json({ msg: "Cadastro excluído" });
+    } catch (err) {
+      console.log(err)
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
 };

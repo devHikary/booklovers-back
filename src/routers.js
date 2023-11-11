@@ -19,14 +19,22 @@ const ReportFailureController = require('./controllers/ReportFailureController')
 const routes = express.Router();
 
 routes.get('/users', middlewares.verifyToken, UserController.getAll);
+routes.get('/users/:id', middlewares.verifyToken, UserController.getById);
 routes.post('/users', UserController.create);
+routes.put('/users', UserController.update);
+routes.delete('/users/:id', middlewares.verifyToken, UserController.delete);
 
 routes.get('/permissions', middlewares.verifyToken, PermissionController.getAll);
 routes.post('/permissions', middlewares.verifyToken, PermissionController.create);
+routes.get('/permissions/:id', middlewares.verifyToken, PermissionController.getById);
+routes.put('/permissions', middlewares.verifyToken, PermissionController.update);
+routes.delete('/permissions/:id', middlewares.verifyToken, PermissionController.delete);
 
 routes.get('/roles', middlewares.verifyToken, RoleController.getAll);
+routes.get('/roles/:id', middlewares.verifyToken, RoleController.getById);
 routes.post('/roles', middlewares.verifyToken, RoleController.create);
 routes.put('/roles', middlewares.verifyToken, RoleController.update);
+routes.delete('/roles/:id', middlewares.verifyToken, RoleController.delete);
 
 routes.get('/goals/u/:user_id', middlewares.verifyToken, GoalController.getAll);
 routes.get('/goals/:id', middlewares.verifyToken, GoalController.getById);

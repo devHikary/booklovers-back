@@ -6,11 +6,30 @@ const crypto = require("crypto");
 module.exports = {
   async getAll(req, res) {
     try {
-      const users = await User.findAll();
+      const users = await User.findAll({
+          attributes:["username"],
+      });
 
       return res.json(users);
     } catch (err) {
-      console.log(err)
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async getById(req, res) {
+    try {
+      const { id } = req.params;
+
+      const user = await User.findByPk(id,{
+        attributes:["username", "name", "email"],
+      }).catch(()=>{
+        return res.status(404).json({ error: "Cadastro não encontrado" });
+      });
+
+      return res.json(user);
+    } catch (err) {
+      console.log(err);
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
@@ -25,7 +44,7 @@ module.exports = {
           email: email,
         },
       }).catch();
-  
+
       if (email_aux)
         return res.status(400).json({ error: "E-mail já cadastrado" });
 
@@ -34,7 +53,7 @@ module.exports = {
           username: username,
         },
       }).catch();
-  
+
       if (username_aux)
         return res.status(400).json({ error: "Username já cadastrado" });
 
@@ -44,7 +63,7 @@ module.exports = {
         return res.status(400).json({ error: "Perfil inválido" });
       }
 
-      const user = await User.create({
+      await User.create({
         id,
         role_id,
         username,
@@ -53,7 +72,85 @@ module.exports = {
         password,
       });
 
-      return res.json(user);
+      return res.json({ msg: "Registro criado" });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async update(req, res) {
+    try {
+      const { id, username, role_id, name, email, password } = req.body;
+
+      const email_aux = await User.findOne({
+        where: {
+          email: email,
+        },
+      }).catch ((err) =>{
+        console.log(err);
+      })
+
+      if (email_aux && email_aux.id != id)
+        return res.status(400).json({ error: "E-mail já cadastrado" });
+
+      const username_aux = await User.findOne({
+        where: {
+          username: username,
+        },
+      }).catch ((err) =>{
+        console.log(err);
+      })
+
+        if (username_aux && username_aux.id != id)
+          return res.status(400).json({ error: "Username já cadastrado" });
+
+
+      const role = await Role.findByPk(role_id);
+
+      if (!role) {
+        return res.status(400).json({ error: "Perfil inválido" });
+      }
+
+      const user = await User.findByPk(id);
+      if(password == ''){
+        console.log("1--------------------")
+        await user.update({
+          username,
+          name,
+          email,
+        });
+      }else{
+        console.log("2--------------------")
+        await user.update({
+          username,
+          name,
+          email,
+          password,
+        });
+      }
+
+      
+
+      return res.json({ msg: "Registro atualizado" });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async delete(req, res) {
+    try {
+      const { id } = req.params;
+
+
+      const user = await User.findByPk(id).catch((err) => {
+        return res.status(400).json({ error: "Registro não existe" });
+      });
+
+      await user.destroy({ where: {id} });
+
+      return res.json({ msg: "Cadastro excluído" });
     } catch (err) {
       console.log(err)
       return res.status(400).json({ error: "Cadastro incorreto" });

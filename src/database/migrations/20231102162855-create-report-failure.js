@@ -11,10 +11,7 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.UUID,
-        allowNull: false,
-        references: { model: 'users', key: 'id' },
-        onUpdate: 'CASCADE',
-        onDelete: 'RESTRICT',
+        allowNull: true,
       },
       book_id: {
         type: Sequelize.UUID,
@@ -22,6 +19,7 @@ module.exports = {
       },
       description: {
         type: Sequelize.TEXT,
+        allowNull: false,
       },
       status: {
         type: Sequelize.INTEGER,
