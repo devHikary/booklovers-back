@@ -13,6 +13,7 @@ const LoginController = require('./controllers/LoginController');
 const middlewares = require('./middleware/middlewares');
 const homeController = require('./controllers/homeController');
 const StatisticController = require('./controllers/StatisticController');
+const ReportFailureController = require('./controllers/ReportFailureController');
 
 
 const routes = express.Router();
@@ -78,6 +79,10 @@ routes.get('/statistic/rating', middlewares.verifyToken, StatisticController.get
 routes.get('/statistic/theme', middlewares.verifyToken, StatisticController.getTheme);
 routes.get('/statistic/favorite', middlewares.verifyToken, StatisticController.getFavorites);
 
+routes.post('/reportFailures', middlewares.verifyToken, ReportFailureController.create);
+routes.put('/reportFailures', middlewares.verifyToken, ReportFailureController.update);
+routes.get('/reportFailures', middlewares.verifyToken, ReportFailureController.getAll);
+routes.get('/reportFailures/:id', middlewares.verifyToken, ReportFailureController.getById);
 
 
 routes.post('/login', LoginController.auth);

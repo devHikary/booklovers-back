@@ -15,6 +15,7 @@ class User extends Model {
   static associate(models) {
     this.belongsTo(models.Role, { foreignKey: 'role_id'});
     this.hasMany(models.Goal, { foreignKey: 'user_id'});
+    this.hasMany(models.ReportFailure, { foreignKey: 'user_id'});
     this.belongsToMany(models.Annotation, { foreignKey: 'user_id', through: 'annotations'});
     this.hasMany(models.Tag, { foreignKey: 'user_id'});
     this.hasMany(models.List, { foreignKey: 'user_id'});

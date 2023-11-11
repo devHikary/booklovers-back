@@ -12,7 +12,7 @@ const List = require('../models/List');
 const ListBook = require('../models/ListBook');
 const Author = require('../models/Author');
 const Theme = require('../models/Theme');
-const annotations = require('../models/Annotation');
+const ReportFailure = require('../models/ReportFailure');
 
 const connection = new Sequelize(dbConfig);
 
@@ -27,6 +27,7 @@ List.init(connection);
 ListBook.init(connection);
 Author.init(connection);
 Theme.init(connection);
+ReportFailure.init(connection);
 
 Permission.associate(connection.models);
 Role.associate(connection.models);
@@ -39,5 +40,6 @@ List.associate(connection.models);
 ListBook.associate(connection.models);
 Author.associate(connection.models);
 Theme.associate(connection.models);
+ReportFailure.associate(connection.models);
 
 module.exports = connection;
