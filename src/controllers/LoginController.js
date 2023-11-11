@@ -42,7 +42,7 @@ module.exports = {
           "permissions": role.Permissions
 
           }, process.env.SECRET, {
-          expiresIn: 3600, // expires in 5min = 300
+          expiresIn: 21600, // expires in 5min = 300 6h = 21600
         });
         return res.json({ auth: true, token: token });
       } else {

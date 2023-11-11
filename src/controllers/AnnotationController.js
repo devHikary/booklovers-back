@@ -3,6 +3,12 @@ const crypto = require("crypto");
 const User = require("../models/User");
 const Book = require("../models/Book");
 const Tag = require("../models/Tag");
+const { Op } = require("sequelize");
+const Author = require("../models/Author");
+const Theme = require("../models/Theme");
+
+const TODAY_START = new Date().setHours(0, 0, 0, 0);
+const NOW = new Date();
 
 module.exports = {
   async getAll(req, res) {
@@ -118,7 +124,7 @@ module.exports = {
         favorite,
       });
 
-      let arr_tag_id = []
+      let arr_tag_id = [];
       if (tags) {
         for (const tag of tags) {
           const id = crypto.randomUUID();
@@ -126,7 +132,7 @@ module.exports = {
             where: { name: tag.name },
             defaults: {
               id: id,
-              user_id: user_id
+              user_id: user_id,
             },
           });
           if (tag.id === null && created) tag.id = id;
@@ -138,6 +144,294 @@ module.exports = {
       }
 
       return res.json(annotation);
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async getFinished(req, res) {
+    try {
+      const { user_id } = req.params;
+      const result = [];
+
+      const annotations = await Annotation.findAll({
+        attributes: [
+          "id",
+          "pages_read",
+          "progress",
+          "rating",
+          "review",
+          "date_start",
+          "date_end",
+          "favorite",
+          "book_id"
+        ],
+        where: {
+          [Op.or]: [
+            {
+              date_end: {
+                [Op.ne]: null,
+              },
+            },
+            {
+              progress: {
+                [Op.eq]: 100,
+              },
+            },
+          ],
+          user_id: user_id,
+        },
+        include: [
+          {
+            association: "tags",
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          // {
+          //   model: Book,
+          //   // attributes: ["id", "title"],
+          //   // through: {
+          //   //   attributes: [],
+          //   // },
+          // },
+        ],
+      });
+
+      if (annotations.length > 0) {
+        for (let annotation of annotations) {
+
+          const book = await Book.findByPk( annotation.book_id,{
+            include: [
+              {
+                model: Author,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+              {
+                model: Theme,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          });
+
+          if(book)
+            result.push({book: book, annotation: annotation})
+        }
+      }
+
+      return res.json(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async getFavorite(req, res) {
+    try {
+      const { user_id } = req.params;
+      const result = [];
+
+      const annotations = await Annotation.findAll({
+        attributes: [
+          "id",
+          "pages_read",
+          "progress",
+          "rating",
+          "review",
+          "date_start",
+          "date_end",
+          "favorite",
+          "book_id"
+        ],
+        where: {
+          favorite: {
+            [Op.eq]: 1,
+          },
+          user_id: user_id,
+        },
+        include: [
+          {
+            association: "tags",
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          // {
+          //   model: Book,
+          //   // attributes: ["id", "title"],
+          //   // through: {
+          //   //   attributes: [],
+          //   // },
+          // },
+        ],
+      });
+
+      if (annotations.length > 0) {
+        for (let annotation of annotations) {
+
+          const book = await Book.findByPk( annotation.book_id,{
+            include: [
+              {
+                model: Author,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+              {
+                model: Theme,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          });
+
+          if(book)
+            result.push({book: book, annotation: annotation})
+        }
+      }
+
+      return res.json(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async getReading(req, res) {
+    try {
+      const { user_id } = req.params;
+      const result = [];
+
+      const annotations = await Annotation.findAll({
+        attributes: [
+          "id",
+          "pages_read",
+          "progress",
+          "rating",
+          "review",
+          "date_start",
+          "date_end",
+          "favorite",
+          "book_id"
+        ],
+        where: {
+          [Op.or]: [
+            {
+              [Op.and]: [
+                {
+                  date_start: {
+                    [Op.ne]: null,
+                  },
+                },
+                {
+                  date_end: {
+                    [Op.eq]: null,
+                  },
+                },
+              ],
+            },
+            {
+              [Op.and]: [
+                {
+                  progress: {
+                    [Op.ne]: 0,
+                  },
+                },
+                {
+                  progress: {
+                    [Op.ne]: 100,
+                  },
+                },
+                {
+                  date_end: {
+                    [Op.eq]: null,
+                  },
+                },
+              ],
+            },
+            {
+              [Op.and]: [
+                {
+                  pages_read: {
+                    [Op.ne]: 0,
+                  },
+                },
+                {
+                  progress: {
+                    [Op.ne]: 100,
+                  },
+                },
+                {
+                  date_end: {
+                    [Op.eq]: null,
+                  },
+                },
+              ],
+            },
+          ],
+          user_id: user_id,
+          date_end: {
+            [Op.eq]: null,
+          },
+        },
+        include: [
+          {
+            association: "tags",
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          // {
+          //   model: Book,
+          //   // attributes: ["id", "title"],
+          //   // through: {
+          //   //   attributes: [],
+          //   // },
+          // },
+        ],
+      });
+
+      if (annotations.length > 0) {
+        for (let annotation of annotations) {
+
+          const book = await Book.findByPk( annotation.book_id,{
+            include: [
+              {
+                model: Author,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+              {
+                model: Theme,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          });
+
+          if(book)
+            result.push({book: book, annotation: annotation})
+        }
+      }
+
+      return res.json(result);
     } catch (err) {
       console.log(err);
       return res.status(400).json({ error: "Cadastro incorreto" });

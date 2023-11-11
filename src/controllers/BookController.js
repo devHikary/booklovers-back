@@ -73,10 +73,9 @@ module.exports = {
       });
 
       if (b) {
-        const b_id = b.id;
         return res.status(400).json({
           error: "Registro duplicado",
-          book_id: b_id,
+          book_id: b.id,
         });
       }
 
@@ -151,10 +150,18 @@ module.exports = {
         themes,
       } = req.body;
 
-      const book = await Book.findByPk(id);
+      const isbn_aux = await Book.findOne({
+        where:{isbn_13: isbn_13}
+      })
 
-      if (!book)
-        return res.status(400).json({ error: "Cadastro não encontrado" });
+      if(isbn_aux && isbn_aux.id != id)
+        return res.status(400).json({ error: "Registro duplicado", book_id: isbn_aux.id })
+
+      const book = await Book.findByPk(id).catch(() => {
+        return res.status(400).json({ error: "Cadastro não encontrado" })
+      });
+
+
 
       book.update({
         id,
@@ -345,4 +352,6 @@ module.exports = {
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
+
+ 
 };

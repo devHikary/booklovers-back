@@ -55,7 +55,7 @@ module.exports = {
         return res.status(400).json({ error: "Registro duplicado" });
 
       const role = await Role.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Usuário não existe" });
+        return res.status(400).json({ error: "Registro não existe" });
       });
 
       await role.update({ id, name });
