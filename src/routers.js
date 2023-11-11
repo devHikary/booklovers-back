@@ -23,6 +23,7 @@ routes.get('/users/:id', middlewares.verifyToken, UserController.getById);
 routes.post('/users', UserController.create);
 routes.put('/users', UserController.update);
 routes.delete('/users/:id', middlewares.verifyToken, UserController.delete);
+routes.put('/users/updatePwd', middlewares.verifyToken, UserController.updatePwd);
 
 routes.get('/permissions', middlewares.verifyToken, PermissionController.getAll);
 routes.post('/permissions', middlewares.verifyToken, PermissionController.create);

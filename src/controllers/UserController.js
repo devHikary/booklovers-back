@@ -113,22 +113,12 @@ module.exports = {
       }
 
       const user = await User.findByPk(id);
-      if(password == ''){
-        console.log("1--------------------")
-        await user.update({
-          username,
-          name,
-          email,
-        });
-      }else{
-        console.log("2--------------------")
-        await user.update({
-          username,
-          name,
-          email,
-          password,
-        });
-      }
+
+      await user.update({
+        username,
+        name,
+        email,
+      });
 
       
 
@@ -153,6 +143,29 @@ module.exports = {
       return res.json({ msg: "Cadastro excluído" });
     } catch (err) {
       console.log(err)
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
+
+  async updatePwd(req, res) {
+    try {
+      const { id, passCurrent, passNew } = req.body;
+
+      const user = await User.findByPk(id).catch(() =>{
+        return res.status(404).json({ error: "Registro não encontrado" });
+      });
+
+      if(passCurrent === user.password){
+        await user.update({
+          password: passNew
+        });
+      }else{
+        return res.status(400).json({ error: "Senha atual incorreta" });
+      }
+      
+      return res.json({ msg: "Registro atualizado" });
+    } catch (err) {
+      console.log(err);
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
