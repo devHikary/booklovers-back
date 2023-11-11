@@ -46,7 +46,7 @@ module.exports = {
       }).catch();
 
       if (email_aux)
-        return res.status(400).json({ error: "E-mail já cadastrado" });
+        return res.status(400).json({ error: "E-mail já cadastrado", id: email_aux.id });
 
       const username_aux = await User.findOne({
         where: {
