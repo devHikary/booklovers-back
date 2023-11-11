@@ -437,4 +437,72 @@ module.exports = {
       return res.status(400).json({ error: "Cadastro incorreto" });
     }
   },
+
+  async getRating(req, res) {
+    try {
+      const rating = req.query.r;
+      const user_id = req.query.u;
+
+      const result = [];
+
+      const annotations = await Annotation.findAll({
+        attributes: [
+          "id",
+          "pages_read",
+          "progress",
+          "rating",
+          "review",
+          "date_start",
+          "date_end",
+          "favorite",
+          "book_id"
+        ],
+        where: {
+         user_id: user_id,
+         rating: rating
+        },
+        include: [
+          {
+            association: "tags",
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
+
+      if (annotations.length > 0) {
+        for (let annotation of annotations) {
+
+          const book = await Book.findByPk( annotation.book_id,{
+            include: [
+              {
+                model: Author,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+              {
+                model: Theme,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          });
+
+          if(book)
+            result.push({book: book, annotation: annotation})
+        }
+      }
+
+      return res.json(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ error: "Cadastro incorreto" });
+    }
+  },
 };

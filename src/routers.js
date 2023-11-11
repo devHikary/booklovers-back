@@ -12,6 +12,7 @@ const ThemeController = require('./controllers/ThemeController');
 const LoginController = require('./controllers/LoginController');
 const middlewares = require('./middleware/middlewares');
 const homeController = require('./controllers/homeController');
+const StatisticController = require('./controllers/StatisticController');
 
 
 const routes = express.Router();
@@ -46,6 +47,7 @@ routes.put('/annotations', middlewares.verifyToken, AnnotationController.update)
 routes.get('/annotations/finished/:user_id', AnnotationController.getFinished);
 routes.get('/annotations/favorite/:user_id', AnnotationController.getFavorite);
 routes.get('/annotations/reading/:user_id', AnnotationController.getReading);
+routes.get('/annotations/rating', AnnotationController.getRating);
 
 routes.get('/tags', middlewares.verifyToken, TagController.getAll);
 routes.get('/tags/user/:user_id', middlewares.verifyToken, TagController.getAllUser);
@@ -59,7 +61,8 @@ routes.post('/authors', middlewares.verifyToken, AuthorController.create);
 
 routes.get('/themes', middlewares.verifyToken, ThemeController.getAll);
 routes.post('/themes', middlewares.verifyToken, ThemeController.create);
-routes.get('/themes/:id/u/:user_id', middlewares.verifyToken, ThemeController.getById);
+routes.get('/themes/u', middlewares.verifyToken, ThemeController.getByIdUser);
+routes.get('/themes/id', middlewares.verifyToken, ThemeController.getById);
 
 routes.get('/lists/myl/:user_id', middlewares.verifyToken, ListController.getAll);
 routes.get('/lists/myb/:user_id', middlewares.verifyToken, ListController.getAllBooks);
@@ -69,6 +72,11 @@ routes.post('/lists/book/', middlewares.verifyToken, ListController.pushBook);
 routes.get('/lists/:id', middlewares.verifyToken, ListController.getBooks);
 routes.delete('/lists/:id', middlewares.verifyToken, ListController.delete);
 
+routes.get('/statistic/month/:user_id', middlewares.verifyToken, StatisticController.getMonth);
+routes.get('/statistic/year/:user_id', middlewares.verifyToken, StatisticController.getYear);
+routes.get('/statistic/rating', middlewares.verifyToken, StatisticController.getRating);
+routes.get('/statistic/theme', middlewares.verifyToken, StatisticController.getTheme);
+routes.get('/statistic/favorite', middlewares.verifyToken, StatisticController.getFavorites);
 
 
 
