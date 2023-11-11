@@ -68,6 +68,8 @@ routes.get('/tags/:id/u/:user_id', middlewares.verifyToken, TagController.getByI
 
 routes.get('/authors', middlewares.verifyToken, AuthorController.getAll);
 routes.post('/authors', middlewares.verifyToken, AuthorController.create);
+routes.get('/authors/u', middlewares.verifyToken, AuthorController.getByIdUser);
+routes.get('/authors/id', middlewares.verifyToken, AuthorController.getById);
 
 routes.get('/themes', middlewares.verifyToken, ThemeController.getAll);
 routes.post('/themes', middlewares.verifyToken, ThemeController.create);

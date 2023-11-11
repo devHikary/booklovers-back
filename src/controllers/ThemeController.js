@@ -9,7 +9,10 @@ const Tag = require("../models/Tag");
 module.exports = {
   async getAll(req, res) {
     try {
-      const theme = await Theme.findAll({attributes: ['id','name']});
+      const theme = await Theme.findAll({
+        attributes: ["id", "name"],
+        order: [["name", "ASC"]],
+      });
 
       return res.json(theme);
     } catch (err) {
@@ -34,7 +37,7 @@ module.exports = {
 
       const theme = await Theme.create({
         id,
-        name
+        name,
       });
 
       return res.json(theme);
@@ -49,49 +52,52 @@ module.exports = {
       const { id, user_id } = req.query;
       let result = [];
 
-      const books = await Book.findAll(
-        {
+      const books = await Book.findAll({
+        include: [
+          {
+            model: Author,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Theme,
+            attributes: ["id", "name"],
+            where: { id: id },
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
+      for (let book of books) {
+        const annotation = await Annotation.findOne({
+          attributes: [
+            "id",
+            "pages_read",
+            "progress",
+            "rating",
+            "review",
+            "date_start",
+            "date_end",
+            "favorite",
+          ],
+          where: {
+            [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
+          },
           include: [
             {
-              model: Author,
+              association: "tags",
               attributes: ["id", "name"],
-              through: {
-                attributes: [],
-              },
-            },
-            {
-              model: Theme,
-              attributes: ["id", "name"],
-              where: {id: id},
               through: {
                 attributes: [],
               },
             },
           ],
-        }
-      );
-      for(let book of books){
-        const annotation = await Annotation.findOne(
-          {
-            attributes: ["id","pages_read", "progress", "rating", "review", "date_start", "date_end", "favorite"],
-            where: {
-              [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
-            },
-            include: [
-              {
-                association: 'tags',
-                attributes: ["id", "name"],
-                through: {
-                  attributes: [],
-                },
-              },
-            ],
-          },
-        );
-        if(annotation)
-          result.push({book: book, annotation: annotation})
+        });
+        if (annotation) result.push({ book: book, annotation: annotation });
       }
-
 
       return res.json(result);
     } catch (err) {
@@ -105,48 +111,52 @@ module.exports = {
       const { id, user_id } = req.query;
       let result = [];
 
-      const books = await Book.findAll(
-        {
+      const books = await Book.findAll({
+        include: [
+          {
+            model: Author,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Theme,
+            attributes: ["id", "name"],
+            where: { id: id },
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
+      for (let book of books) {
+        const annotation = await Annotation.findOne({
+          attributes: [
+            "id",
+            "pages_read",
+            "progress",
+            "rating",
+            "review",
+            "date_start",
+            "date_end",
+            "favorite",
+          ],
+          where: {
+            [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
+          },
           include: [
             {
-              model: Author,
+              association: "tags",
               attributes: ["id", "name"],
-              through: {
-                attributes: [],
-              },
-            },
-            {
-              model: Theme,
-              attributes: ["id", "name"],
-              where: {id: id},
               through: {
                 attributes: [],
               },
             },
           ],
-        }
-      );
-      for(let book of books){
-        const annotation = await Annotation.findOne(
-          {
-            attributes: ["id","pages_read", "progress", "rating", "review", "date_start", "date_end", "favorite"],
-            where: {
-              [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
-            },
-            include: [
-              {
-                association: 'tags',
-                attributes: ["id", "name"],
-                through: {
-                  attributes: [],
-                },
-              },
-            ],
-          },
-        );
-          result.push({book: book, annotation: annotation})
+        });
+        result.push({ book: book, annotation: annotation });
       }
-
 
       return res.json(result);
     } catch (err) {
