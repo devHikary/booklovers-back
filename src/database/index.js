@@ -1,18 +1,18 @@
-const Sequelize = require('sequelize');
-const dbConfig = require('../config/database');
+const Sequelize = require("sequelize");
+const dbConfig = require("../config/database");
 
-const User = require('../models/User');
-const Permission = require('../models/Permission');
-const Role = require('../models/Role');
-const Goal = require('../models/Goal');
-const Book = require('../models/Book');
-const Annotation = require('../models/Annotation');
-const Tag = require('../models/Tag');
-const List = require('../models/List');
-const ListBook = require('../models/ListBook');
-const Author = require('../models/Author');
-const Theme = require('../models/Theme');
-const ReportFailure = require('../models/ReportFailure');
+const User = require("../models/User");
+const Permission = require("../models/Permission");
+const Role = require("../models/Role");
+const Goal = require("../models/Goal");
+const Book = require("../models/Book");
+const Annotation = require("../models/Annotation");
+const Tag = require("../models/Tag");
+const List = require("../models/List");
+const ListBook = require("../models/ListBook");
+const Author = require("../models/Author");
+const Theme = require("../models/Theme");
+const ReportFailure = require("../models/ReportFailure");
 
 const connection = new Sequelize(dbConfig);
 

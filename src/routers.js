@@ -21,7 +21,7 @@ const routes = express.Router();
 routes.get('/users', middlewares.verifyToken, UserController.getAll);
 routes.get('/users/:id', middlewares.verifyToken, UserController.getById);
 routes.post('/users', UserController.create);
-routes.put('/users', UserController.update);
+routes.put('/users', middlewares.verifyToken, UserController.update);
 routes.delete('/users/:id', middlewares.verifyToken, UserController.delete);
 routes.put('/users/updatePwd', middlewares.verifyToken, UserController.updatePwd);
 
@@ -58,6 +58,8 @@ routes.get('/annotations/finished/:user_id', AnnotationController.getFinished);
 routes.get('/annotations/favorite/:user_id', AnnotationController.getFavorite);
 routes.get('/annotations/reading/:user_id', AnnotationController.getReading);
 routes.get('/annotations/rating', AnnotationController.getRating);
+routes.get('/annotations/theme', AnnotationController.getAllByTheme);
+routes.get('/annotations/author', AnnotationController.getAllByAuthor);
 
 routes.get('/tags', middlewares.verifyToken, TagController.getAll);
 routes.get('/tags/user/:user_id', middlewares.verifyToken, TagController.getAllUser);
@@ -68,13 +70,17 @@ routes.get('/tags/:id/u/:user_id', middlewares.verifyToken, TagController.getByI
 
 routes.get('/authors', middlewares.verifyToken, AuthorController.getAll);
 routes.post('/authors', middlewares.verifyToken, AuthorController.create);
+routes.put('/authors', middlewares.verifyToken, AuthorController.update);
+routes.delete('/authors/:id', middlewares.verifyToken, AuthorController.delete);
 routes.get('/authors/u', middlewares.verifyToken, AuthorController.getByIdUser);
-routes.get('/authors/id', middlewares.verifyToken, AuthorController.getById);
+routes.get('/authors/:id', middlewares.verifyToken, AuthorController.getById);
 
 routes.get('/themes', middlewares.verifyToken, ThemeController.getAll);
 routes.post('/themes', middlewares.verifyToken, ThemeController.create);
+routes.put('/themes', middlewares.verifyToken, ThemeController.update);
+routes.delete('/themes/:id', middlewares.verifyToken, ThemeController.delete);
 routes.get('/themes/u', middlewares.verifyToken, ThemeController.getByIdUser);
-routes.get('/themes/id', middlewares.verifyToken, ThemeController.getById);
+routes.get('/themes/:id', middlewares.verifyToken, ThemeController.getById);
 
 routes.get('/lists/myl/:user_id', middlewares.verifyToken, ListController.getAll);
 routes.get('/lists/myb/:user_id', middlewares.verifyToken, ListController.getAllBooks);

@@ -52,7 +52,7 @@ module.exports = {
       return res.json(result);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -108,7 +108,7 @@ module.exports = {
       return res.json(AnnotationByAllYear);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -129,7 +129,7 @@ module.exports = {
       return res.json(AnnotationByAllYear);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -157,7 +157,7 @@ module.exports = {
       return res.json(themes);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -177,7 +177,7 @@ module.exports = {
       return res.json(AnnotationByFavorite);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 };

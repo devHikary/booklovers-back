@@ -14,7 +14,7 @@ module.exports = {
 
       return res.json(tags);
     } catch (err) {
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -28,7 +28,7 @@ module.exports = {
 
       return res.json(tags);
     } catch (err) {
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -57,12 +57,14 @@ module.exports = {
         id,
         name,
         user_id,
+      }).catch((err) => {
+        return res.status(400).json({ error: "Cadastro incorreto" });
       });
 
       return res.json(tag);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -99,7 +101,6 @@ module.exports = {
           },
         ],
       });
-      console.log("annot 888888888 ",annotations)
       
       if (annotations.length > 0) {
         for (let annotation of annotations) {
@@ -131,7 +132,7 @@ module.exports = {
       return res.json(result);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -153,12 +154,14 @@ module.exports = {
         return res.status(400).json({ error: "Usuário não existe" });
       });
 
-      await tag.update({ id, name });
+      await tag.update({ id, name }).catch((err) => {
+        return res.status(400).json({ error: "Cadastro incorreto" });
+      });
 
       return res.json(tag);
     } catch (err) {
       console.log(err)
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -168,7 +171,7 @@ module.exports = {
 
 
       const tag = await Tag.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+        return res.status(404).json({ error: "Registro não existe" });
       });
 
       await tag.destroy({ where: {id} });
@@ -176,7 +179,7 @@ module.exports = {
       return res.json({ msg: "Cadastro excluído" });
     } catch (err) {
       console.log(err)
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 };

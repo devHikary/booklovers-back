@@ -4,9 +4,13 @@ const crypto = require("crypto");
 
 module.exports = {
   async getAll(req, res) {
-    const role = await Role.findAll();
+    try {
+      const role = await Role.findAll();
 
-    return res.json(role);
+      return res.json(role);
+    } catch (error) {
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+    }
   },
 
   async getById(req, res) {
@@ -23,12 +27,14 @@ module.exports = {
             },
           },
         ],
+      }).catch((err) => {
+        return res.status(404).json({ error: "Registro não encontrado" });
       });
 
       return res.json(role);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -61,7 +67,7 @@ module.exports = {
       return res.json(role);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
   async update(req, res) {
@@ -96,7 +102,7 @@ module.exports = {
       const { id } = req.params;
 
       const role = await Role.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+        return res.status(404).json({ error: "Registro não existe" });
       });
 
       await role.destroy({ where: { id } });
@@ -104,7 +110,7 @@ module.exports = {
       return res.json({ msg: "Cadastro excluído" });
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 };

@@ -35,7 +35,7 @@ module.exports = {
       return res.json(annotation);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -103,7 +103,7 @@ module.exports = {
       return res.json(annotation);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -159,7 +159,7 @@ module.exports = {
       return res.json(annotation);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -243,7 +243,7 @@ module.exports = {
       return res.json(result);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -318,7 +318,7 @@ module.exports = {
       return res.json(result);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -447,7 +447,7 @@ module.exports = {
       return res.json(result);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -515,7 +515,121 @@ module.exports = {
       return res.json(result);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+    }
+  },
+
+  async getAllByTheme(req, res) {
+    try {
+      const { id, user_id } = req.query;
+      let result = [];
+
+      const books = await Book.findAll({
+        include: [
+          {
+            model: Author,
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            model: Theme,
+            attributes: ["id", "name"],
+            where: { id: id },
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
+      for (let book of books) {
+        const annotation = await Annotation.findOne({
+          attributes: [
+            "id",
+            "pages_read",
+            "progress",
+            "rating",
+            "review",
+            "date_start",
+            "date_end",
+            "favorite",
+          ],
+          where: {
+            [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
+          },
+          include: [
+            {
+              association: "tags",
+              attributes: ["id", "name"],
+              through: {
+                attributes: [],
+              },
+            },
+          ],
+        });
+        result.push({ book: book, annotation: annotation });
+      }
+
+      return res.json(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+    }
+  },
+
+  async getAllByAuthor(req, res) {
+    try {
+      const { id, user_id } = req.query;
+      let result = [];
+
+      const books = await Book.findAll(
+        {
+          include: [
+            {
+              model: Author,
+              where: {id: id},
+              attributes: ["id", "name"],
+              through: {
+                attributes: [],
+              },
+            },
+            {
+              model: Theme,
+              attributes: ["id", "name"],
+              through: {
+                attributes: [],
+              },
+            },
+          ],
+        }
+      );
+      for(let book of books){
+        const annotation = await Annotation.findOne(
+          {
+            attributes: ["id","pages_read", "progress", "rating", "review", "date_start", "date_end", "favorite"],
+            where: {
+              [Op.and]: [{ book_id: book.id }, { user_id: user_id }],
+            },
+            include: [
+              {
+                association: 'tags',
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          },
+        );
+          result.push({book: book, annotation: annotation})
+      }
+
+
+      return res.json(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 };

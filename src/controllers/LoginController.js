@@ -1,9 +1,10 @@
 const User = require("../models/User");
 require("dotenv-safe").config();
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
 const Role = require("../models/Role");
 const Permission = require("../models/Permission");
+const { ValidationError } = require("sequelize");
 
 module.exports = {
   async auth(req, res) {
@@ -27,32 +28,39 @@ module.exports = {
         const role = await Role.findOne({
           where: {
             id: user.role_id,
-          }, include:{
+          },
+          include: {
             model: Permission,
             attributes: ["name", "url"],
-            through:{
+            through: {
               attributes: [],
-            }
-          }
+            },
+          },
         }).catch();
 
         const id = user.id;
-        const token = jwt.sign({ 
-          "id": id,
-          "username": username,
-          "permissions": role.Permissions
-
-          }, process.env.SECRET, {
-          expiresIn: 21600, // expires in 5min = 300 6h = 21600
-        });
+        const token = jwt.sign(
+          {
+            id: id,
+            username: username,
+            permissions: role.Permissions,
+          },
+          process.env.SECRET,
+          {
+            expiresIn: 21600, // expires in 5min = 300 6h = 21600
+          }
+        );
         return res.json({ auth: true, token: token });
       } else {
         res.status(500).json({ message: "Login inválido!" });
       }
     } catch (err) {
-      console.log(err);
-      res.status(500).json({ message: "Login inválido!" });
+      console.log(err.name);
+      if( err.name === 'SequelizeConnectionRefusedError'){
+        res.status(503).json({ message: 'Erro no servidor! Tente mais tarde'});
+      } else{
+        res.status(500).json({ message: "Atenção! Usuário ou senha incorreta" });
+      }
     }
   },
-
 };

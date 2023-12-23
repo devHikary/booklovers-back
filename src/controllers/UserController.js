@@ -13,7 +13,7 @@ module.exports = {
       return res.json(users);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -30,7 +30,7 @@ module.exports = {
       return res.json(user);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -46,7 +46,7 @@ module.exports = {
       }).catch();
 
       if (email_aux)
-        return res.status(400).json({ error: "E-mail já cadastrado", id: email_aux.id });
+        return res.status(400).json({ error: "E-mail já cadastrado"});
 
       const username_aux = await User.findOne({
         where: {
@@ -70,18 +70,20 @@ module.exports = {
         name,
         email,
         password,
+      }).catch((err) => {
+        return res.status(400).json({ error: "Cadastro incorreto" });
       });
 
       return res.json({ msg: "Registro criado" });
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
   async update(req, res) {
     try {
-      const { id, username, role_id, name, email, password } = req.body;
+      const { id, username, role_id, name, email} = req.body;
 
       const email_aux = await User.findOne({
         where: {
@@ -118,14 +120,14 @@ module.exports = {
         username,
         name,
         email,
+      }).catch((err) => {
+        return res.status(400).json({ error: "Cadastro incorreto" });
       });
-
-      
 
       return res.json({ msg: "Registro atualizado" });
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -143,7 +145,7 @@ module.exports = {
       return res.json({ msg: "Cadastro excluído" });
     } catch (err) {
       console.log(err)
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -158,6 +160,8 @@ module.exports = {
       if(passCurrent === user.password){
         await user.update({
           password: passNew
+        }).catch((err) => {
+          return res.status(400).json({ error: "Cadastro incorreto" });
         });
       }else{
         return res.status(400).json({ error: "Senha atual incorreta" });
@@ -166,7 +170,7 @@ module.exports = {
       return res.json({ msg: "Registro atualizado" });
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 };

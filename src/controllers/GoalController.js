@@ -50,13 +50,12 @@ module.exports = {
           await goal.update({ amount: book.length, status: goal.status });
         }
 
-       
       }
 
       return res.json(goals);
     } catch (err) {
       console.log(err)
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -119,7 +118,7 @@ module.exports = {
       return res.json({goals, books});
     } catch (err) {
       console.log(err)
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -134,7 +133,7 @@ module.exports = {
 
       return res.json({ msg: "Registro excluído" });
     } catch (err) {
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -174,7 +173,7 @@ module.exports = {
       return res.json(goal);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -215,7 +214,7 @@ module.exports = {
       return res.json(goal);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 };

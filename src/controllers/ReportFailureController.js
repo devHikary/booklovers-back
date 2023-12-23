@@ -3,11 +3,15 @@ const ReportFailure = require("../models/ReportFailure");
 
 module.exports = {
   async getAll(req, res) {
-    const report = await ReportFailure.findAll({
-      order: [['status', 'ASC']],
-    });
-
-    return res.json(report);
+    try {
+      const report = await ReportFailure.findAll({
+        order: [['status', 'ASC']],
+      });
+  
+      return res.json(report);
+    } catch (err) {
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+    }
   },
 
   async create(req, res) {
@@ -29,7 +33,7 @@ module.exports = {
       return res.json(report);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -52,18 +56,20 @@ module.exports = {
       return res.json(report);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
   async getById(req, res) {
     try {
       const { id } = req.params;
-      const report = await ReportFailure.findByPk(id);
+      const report = await ReportFailure.findByPk(id).catch(() => {
+        return res.status(400).json({ error: "Cadastro incorreto" });
+      });;
 
       return res.json(report);
     } catch (err) {
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 };

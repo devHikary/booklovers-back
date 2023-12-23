@@ -47,7 +47,11 @@ module.exports = {
 
       return res.json(result);
     } catch (err) {
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      if( err.name === 'SequelizeConnectionRefusedError'){
+        res.status(503).json({ message: 'Erro no servidor! Tente mais tarde'});
+      } else{
+        res.status(500).json({ message: 'Erro no servidor! Tente mais tarde' });
+      }
     }
   },
 
@@ -130,7 +134,7 @@ module.exports = {
       return res.json(book);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ message: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -214,7 +218,7 @@ module.exports = {
       return res.json(book);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -243,7 +247,7 @@ module.exports = {
       return res.json(book);
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -285,11 +289,10 @@ module.exports = {
           ],
         },
       );
-        console.log("*****")
       return res.json({book, annotation});
     } catch (err) {
       console.log(err);
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
@@ -349,9 +352,8 @@ module.exports = {
       return res.json(result);
     } catch (err) {
       console.log(err)
-      return res.status(400).json({ error: "Cadastro incorreto" });
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
 
- 
 };
