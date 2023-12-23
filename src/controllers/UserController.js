@@ -21,11 +21,19 @@ module.exports = {
     try {
       const { id } = req.params;
 
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Cadastro não encontrado" });
+      }
+
       const user = await User.findByPk(id,{
         attributes:["username", "name", "email"],
       }).catch(()=>{
         return res.status(404).json({ error: "Cadastro não encontrado" });
       });
+
+      if(user === null) {
+        return res.status(404).json({ error: "Cadastro não encontrado" });
+      }
 
       return res.json(user);
     } catch (err) {
@@ -37,7 +45,11 @@ module.exports = {
   async create(req, res) {
     try {
       const { username, role_id, name, email, password } = req.body;
-      const id = crypto.randomUUID();
+      const id = crypto.randomUUID(); 
+
+      if(role_id.length != 36) {
+        return res.status(404).json({ error: "Perfil inválido" });
+      }
 
       const email_aux = await User.findOne({
         where: {
@@ -116,6 +128,9 @@ module.exports = {
 
       const user = await User.findByPk(id);
 
+      if(user === null) {
+        return res.status(400).json({ error: "ID do usuário inválido" });
+      }
       await user.update({
         username,
         name,
@@ -135,9 +150,12 @@ module.exports = {
     try {
       const { id } = req.params;
 
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const user = await User.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+        return res.status(400).json({ error: "Registro não encontrado" });
       });
 
       await user.destroy({ where: {id} });
@@ -153,10 +171,16 @@ module.exports = {
     try {
       const { id, passCurrent, passNew } = req.body;
 
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const user = await User.findByPk(id).catch(() =>{
         return res.status(404).json({ error: "Registro não encontrado" });
       });
 
+      if(user === null)
+        return res.status(404).json({ error: "Registro não encontrado" });
       if(passCurrent === user.password){
         await user.update({
           password: passNew

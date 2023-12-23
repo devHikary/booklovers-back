@@ -13,10 +13,47 @@
     }
   ],
   "paths": {
-    "/users": {
+    "/login": {
       "post": {
         "summary": "",
         "description": "",
+        "tags": [
+          "Login"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              },
+              "examples": {
+                "user": {
+                  "value": {
+                    "username": "teste3",
+                    "password": "teste#4f"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "summary": "Criar um usuário",
+        "description": "Criar um usuário",
         "tags": [
           "User"
         ],
@@ -42,38 +79,19 @@
         },
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "msg": "Registro criado"
-                }
-              }
-            }
+            "description": "OK"
           },
           "400": {
-            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido",
-            "content": {
-              "application/json": {
-                "error": "E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
-              }
-            }
+            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
           },
           "500": {
-            "description": "Erro no servidor ou servidor indisponível",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "error": "Erro no servidor! Tente mais tarde"
-                }
-              }
-            }
+            "description": "Erro no servidor ou servidor indisponível"
           }
         }
       },
       "put": {
-        "summary": "",
-        "description": "",
+        "summary": "Atualizar o cadastro de usuário",
+        "description": "Atualizar o cadastro de usuário",
         "tags": [
           "User"
         ],
@@ -111,7 +129,7 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
+                    "msg": {
                       "type": "string"
                     }
                   }
@@ -120,7 +138,19 @@
             }
           },
           "400": {
-            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
+            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido ou ID do usuário inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
             "description": "Não foi inserido o token"
@@ -141,27 +171,6 @@
             "bearerAuth": []
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/User"
-              },
-              "examples": {
-                "user": {
-                  "value": {
-                    "id": "9252655d-3361-4910-8f13-9770d5f28ff9",
-                    "name": "karinateste",
-                    "username": "teste3",
-                    "email": "teste3@email.com",
-                    "password": "teste#4f",
-                    "role_id": "a6150b04-bd4f-4cf6-a1b2-a0efbab720f1"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "OK",
@@ -170,16 +179,13 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
+                    "users": {
                       "type": "string"
                     }
                   }
                 }
               }
             }
-          },
-          "400": {
-            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
           },
           "403": {
             "description": "Não foi inserido o token"
@@ -236,7 +242,440 @@
             }
           },
           "404": {
-            "description": "Cadastro não encontrado"
+            "description": "Cadastro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Excluir pelo id do usuário",
+        "description": "Excluir pelo id do usuário",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Excluir usuário pelo id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Cadastro excluído",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/updatePwd": {
+      "put": {
+        "summary": "Atualiza a senha do usuário",
+        "description": "Atualiza a senha do usuário",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "format": "#/components/schemas/UpdatePassword"
+              },
+              "examples": {
+                "user-pass1": {
+                  "value": {
+                    "id": "9252655d-3361-4910-8f13-9770d5f28ff9",
+                    "passCurrent": "teste#4f",
+                    "passNew": "a6150b04"
+                  }
+                },
+                "user-pass2": {
+                  "value": {
+                    "id": "9252655d-3361-4910-8f13-9770d5f28ff9",
+                    "passCurrent": "a6150b04",
+                    "passNew": "teste#4f"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Alguma informação está incorreta como: Senha incorreta ou Username já cadastrado ou Perfil inválido"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/permissions": {
+      "post": {
+        "summary": "Criar uma permissão de rota",
+        "description": "Criar uma permissão de rota",
+        "tags": [
+          "Permission"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Permission"
+              },
+              "examples": {
+                "permission": {
+                  "value": {
+                    "name": "teste",
+                    "url": "booklovers/teste"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar o registro de permissão",
+        "description": "Atualizar o registro de permissão",
+        "tags": [
+          "Permission"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Permission"
+              },
+              "examples": {
+                "permission1": {
+                  "value": {
+                    "id": "6ad67727-db51-45b4-8b24-a7017ffe5618",
+                    "name": "teste1",
+                    "url": "booklovers/teste"
+                  }
+                },
+                "permission2": {
+                  "value": {
+                    "id": "6ad67727-db51-45b4-8b24-a7017ffe5618",
+                    "name": "teste2",
+                    "url": "booklovers/teste"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "get": {
+        "summary": "Buscar todas as permissões",
+        "description": "Buscar todas as permissões",
+        "tags": [
+          "Permission"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Permission"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/permissions/{id}": {
+      "get": {
+        "summary": "Buscar permissão pelo id",
+        "description": "Buscar permissão pelo id",
+        "tags": [
+          "Permission"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Buscar permissão pelo id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Excluir permissão pelo id",
+        "description": "Excluir permissão pelo id",
+        "tags": [
+          "Permission"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Excluir permissão pelo id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Cadastro excluído",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado"
           },
           "403": {
             "description": "Não foi inserido o token"
@@ -259,7 +698,6 @@
         }
       }
     }
-
   },
   "components": {
     "schemas": {
@@ -282,6 +720,45 @@
             "type": "string"
           },
           "role_id": {
+            "type": "string"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdatePassword": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "passCurrent": {
+            "type": "string"
+          },
+          "passNew": {
+            "type": "string"
+          }
+        }
+      },
+      "Permission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "url": {
             "type": "string"
           }
         }

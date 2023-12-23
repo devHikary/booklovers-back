@@ -18,17 +18,17 @@ const ReportFailureController = require('./controllers/ReportFailureController')
 
 const routes = express.Router();
 
-routes.get('/users', middlewares.verifyToken, UserController.getAll);
-routes.get('/users/:id', middlewares.verifyToken, UserController.getById);
 routes.post('/users', UserController.create);
 routes.put('/users', middlewares.verifyToken, UserController.update);
+routes.get('/users', middlewares.verifyToken, UserController.getAll);
+routes.get('/users/:id', middlewares.verifyToken, UserController.getById);
 routes.delete('/users/:id', middlewares.verifyToken, UserController.delete);
 routes.put('/users/updatePwd', middlewares.verifyToken, UserController.updatePwd);
 
-routes.get('/permissions', middlewares.verifyToken, PermissionController.getAll);
 routes.post('/permissions', middlewares.verifyToken, PermissionController.create);
-routes.get('/permissions/:id', middlewares.verifyToken, PermissionController.getById);
 routes.put('/permissions', middlewares.verifyToken, PermissionController.update);
+routes.get('/permissions', middlewares.verifyToken, PermissionController.getAll);
+routes.get('/permissions/:id', middlewares.verifyToken, PermissionController.getById);
 routes.delete('/permissions/:id', middlewares.verifyToken, PermissionController.delete);
 
 routes.get('/roles', middlewares.verifyToken, RoleController.getAll);

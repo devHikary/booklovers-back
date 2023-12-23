@@ -18,7 +18,14 @@ module.exports = {
   async getById(req, res) {
     try {
       const { id } = req.params;
-      const perms = await Permission.findByPk(id);
+
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
+      const perms = await Permission.findByPk(id,{
+        attributes: ["id", "name", "url"],
+      });
 
       return res.json(perms);
     } catch (error) {
@@ -54,6 +61,10 @@ module.exports = {
     try {
       const { id, name, url } = req.body;
 
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const name_aux = await Permission.findOne({
         where: {
           name: name,
@@ -63,11 +74,13 @@ module.exports = {
       if (name_aux && id != name_aux.id)
         return res.status(400).json({ error: "Registro duplicado" });
 
+
       const permis = await Permission.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+        return res.status(400).json({ error: "Registro não encontrado" });
       });
 
-      await permis.update({ id, name, url });
+
+      await permis.update({name, url});
       
       return res.json(permis);
     } catch (err) {
@@ -80,9 +93,12 @@ module.exports = {
     try {
       const { id } = req.params;
 
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const permis = await Permission.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+        return res.status(404).json({ error: "Registro não encontrado" });
       });
 
       await permis.destroy({ where: {id} });
