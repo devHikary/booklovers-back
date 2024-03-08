@@ -98,7 +98,7 @@ module.exports = {
             },
           ],
         });
-        if (annotation) result.push({ book: book, annotation: annotation });
+        result.push({ book: book, annotation: annotation });
       }
 
       return res.json(result);

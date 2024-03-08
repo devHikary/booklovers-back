@@ -168,6 +168,10 @@ module.exports = {
       const { user_id } = req.params;
       const result = [];
 
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const annotations = await Annotation.findAll({
         attributes: [
           "id",
@@ -252,6 +256,10 @@ module.exports = {
       const { user_id } = req.params;
       const result = [];
 
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const annotations = await Annotation.findAll({
         attributes: [
           "id",
@@ -326,6 +334,10 @@ module.exports = {
     try {
       const { user_id } = req.params;
       const result = [];
+
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const annotations = await Annotation.findAll({
         attributes: [
@@ -458,6 +470,10 @@ module.exports = {
 
       const result = [];
 
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const annotations = await Annotation.findAll({
         attributes: [
           "id",
@@ -524,6 +540,10 @@ module.exports = {
       const { id, user_id } = req.query;
       let result = [];
 
+      if(user_id.length != 36 || id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const books = await Book.findAll({
         include: [
           {
@@ -568,7 +588,7 @@ module.exports = {
             },
           ],
         });
-        result.push({ book: book, annotation: annotation });
+        if (annotation) result.push({ book: book, annotation: annotation });
       }
 
       return res.json(result);
@@ -582,6 +602,10 @@ module.exports = {
     try {
       const { id, user_id } = req.query;
       let result = [];
+
+      if(user_id.length != 36 || id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const books = await Book.findAll(
         {
@@ -622,6 +646,7 @@ module.exports = {
             ],
           },
         );
+        if(annotation)
           result.push({book: book, annotation: annotation})
       }
 

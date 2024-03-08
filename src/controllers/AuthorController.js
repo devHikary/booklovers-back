@@ -90,8 +90,8 @@ module.exports = {
             ],
           },
         );
-        if(annotation)
-          result.push({book: book, annotation: annotation})
+        
+        result.push({book: book, annotation: annotation})
       }
 
 
@@ -108,7 +108,7 @@ module.exports = {
       const author = await Author.findByPk(id);
 
       return res.json(author);
-    } catch (error) {
+    } catch (err) {
       console.log(err);
       return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }

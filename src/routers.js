@@ -71,15 +71,15 @@ routes.get('/tags/:id/u/:user_id', middlewares.verifyToken, TagController.getByI
 routes.get('/authors', middlewares.verifyToken, AuthorController.getAll);
 routes.post('/authors', middlewares.verifyToken, AuthorController.create);
 routes.put('/authors', middlewares.verifyToken, AuthorController.update);
-routes.delete('/authors/:id', middlewares.verifyToken, AuthorController.delete);
 routes.get('/authors/u', middlewares.verifyToken, AuthorController.getByIdUser);
+routes.delete('/authors/:id', middlewares.verifyToken, AuthorController.delete);
 routes.get('/authors/:id', middlewares.verifyToken, AuthorController.getById);
 
 routes.get('/themes', middlewares.verifyToken, ThemeController.getAll);
 routes.post('/themes', middlewares.verifyToken, ThemeController.create);
 routes.put('/themes', middlewares.verifyToken, ThemeController.update);
-routes.delete('/themes/:id', middlewares.verifyToken, ThemeController.delete);
 routes.get('/themes/u', middlewares.verifyToken, ThemeController.getByIdUser);
+routes.delete('/themes/:id', middlewares.verifyToken, ThemeController.delete);
 routes.get('/themes/:id', middlewares.verifyToken, ThemeController.getById);
 
 routes.get('/lists/myl/:user_id', middlewares.verifyToken, ListController.getAll);

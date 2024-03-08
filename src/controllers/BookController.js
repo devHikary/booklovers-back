@@ -12,6 +12,11 @@ module.exports = {
     try {
       const{user_id} = req.params;
       const result = [];
+
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const books = await Book.findAll({
         include: {
           model: Author,
@@ -225,6 +230,11 @@ module.exports = {
   async getById(req, res) {
     try {
       const { id } = req.params;
+
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const book = await Book.findByPk(id, {
         include: [
           {
