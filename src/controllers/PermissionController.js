@@ -75,8 +75,8 @@ module.exports = {
         return res.status(400).json({ error: "Registro duplicado" });
 
 
-      const permis = await Permission.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não encontrado" });
+      const permis = await Permission.findByPk(id,  {attributes: ["id", "name", "url"]}).catch((err) => {
+        return res.status(404).json({ error: "Registro não encontrado" });
       });
 
 

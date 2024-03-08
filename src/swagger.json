@@ -212,7 +212,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Buscar usuário pelo id",
+            "description": "ID do usuário",
             "required": true,
             "schema": {
               "type": "string"
@@ -291,7 +291,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Excluir usuário pelo id",
+            "description": "ID do usuário",
             "required": true,
             "schema": {
               "type": "string"
@@ -503,7 +503,19 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "error": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "createdAt": {
                       "type": "string"
                     }
                   }
@@ -512,7 +524,7 @@
             }
           },
           "400": {
-            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
+            "description": "Registro duplicado ou Cadastro incorreto"
           },
           "404": {
             "description": "Registro não encontrado"
@@ -542,7 +554,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Permission"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Permission"
+                  }
                 }
               }
             }
@@ -572,7 +587,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Buscar permissão pelo id",
+            "description": "ID da permissão",
             "required": true,
             "schema": {
               "type": "string"
@@ -620,19 +635,7 @@
             "description": "Não foi inserido o token"
           },
           "500": {
-            "description": "Erro no servidor ou servidor indisponível",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Erro no servidor ou servidor indisponível"
           }
         }
       },
@@ -651,7 +654,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "Excluir permissão pelo id",
+            "description": "ID da permissão",
             "required": true,
             "schema": {
               "type": "string"
@@ -694,6 +697,1675 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/roles": {
+      "post": {
+        "summary": "Criar um perfil",
+        "description": "Criar um perfil",
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Role"
+              },
+              "examples": {
+                "role": {
+                  "value": {
+                    "name": "visitante2",
+                    "permissions": [
+                      "e2460a3f-1e6b-4edf-bb18-c43e20f45ae9",
+                      "d065db5f-0b27-4751-b32b-e06d7ff63c6c"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado"
+          },
+          "404": {
+            "description": "Permissão não encontrada"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar o registro de perfil",
+        "description": "Atualizar o registro de perfil",
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Role"
+              },
+              "examples": {
+                "role1": {
+                  "value": {
+                    "id": "fc548596-fe34-4e25-b6b9-60808bf07615",
+                    "name": "visitante",
+                    "permissions": [
+                      "e2460a3f-1e6b-4edf-bb18-c43e20f45ae9",
+                      "d065db5f-0b27-4751-b32b-e06d7ff63c6c"
+                    ]
+                  }
+                },
+                "role2": {
+                  "value": {
+                    "id": "5733c2b4-88f0-4bd4-b714-467e0b17f5f4",
+                    "name": "visitante1",
+                    "permissions": [
+                      "e2460a3f-1e6b-4edf-bb18-c43e20f45ae9",
+                      "d065db5f-0b27-4751-b32b-e06d7ff63c6c"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado ou Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "get": {
+        "summary": "Buscar todos os perfis",
+        "description": "Buscar todos os perfis",
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/roles/{id}": {
+      "get": {
+        "summary": "Buscar perfil pelo id",
+        "description": "Buscar perfil pelo id",
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do perfil",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "Permissions": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Role"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Excluir perfil pelo id",
+        "description": "Excluir perfil pelo id",
+        "tags": [
+          "Role"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do perfil",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Cadastro excluído",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/goals": {
+      "post": {
+        "summary": "Criar um desafio",
+        "description": "Criar um desafio",
+        "tags": [
+          "Goal"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Goal"
+              },
+              "examples": {
+                "goal": {
+                  "value": {
+                    "name": "Desafio 2024",
+                    "target": 1,
+                    "amount": 0,
+                    "date_start": "2023-10-13T12:45:12.129Z",
+                    "date_end": "2023-10-13T12:45:12.129Z",
+                    "status": 1,
+                    "user_id": "44999b96-1a89-4ca1-9674-45314240e1a4"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": "number"
+                    },
+                    "amount": {
+                      "type": "number"
+                    },
+                    "date_start": {
+                      "type": "string"
+                    },
+                    "date_end": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "number"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar o registro de desafio",
+        "description": "Atualizar o registro de desafio",
+        "tags": [
+          "Goal"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Goal"
+              },
+              "examples": {
+                "goal1": {
+                  "value": {
+                    "id": "c0cb066d-a649-499d-8488-19693d6f1b00",
+                    "name": "Desafio 2024",
+                    "target": 1,
+                    "amount": 0,
+                    "date_start": "2023-10-13T12:45:12.129Z",
+                    "date_end": "2023-10-13T12:45:12.129Z",
+                    "status": 1,
+                    "user_id": "32c10701-4b88-4808-87b5-03428049aea4"
+                  }
+                },
+                "goal2": {
+                  "value": {
+                    "id": "c0cb066d-a649-499d-8488-19693d6f1b00",
+                    "name": "Desafio 20241",
+                    "target": 1,
+                    "amount": 0,
+                    "date_start": "2023-10-13T12:45:12.129Z",
+                    "date_end": "2023-10-13T12:45:12.129Z",
+                    "status": 1,
+                    "user_id": "32c10701-4b88-4808-87b5-03428049aea4"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": "number"
+                    },
+                    "amount": {
+                      "type": "number"
+                    },
+                    "date_start": {
+                      "type": "string"
+                    },
+                    "date_end": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "number"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado ou Cadastro incorreto"
+          },
+          "401": {
+            "description": "Falha de autenticação"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/goals/{id}": {
+      "get": {
+        "summary": "Buscar desafio pelo id",
+        "description": "Buscar desafio pelo id",
+        "tags": [
+          "Goal"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do desafio",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Goal"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Excluir desafio pelo id",
+        "description": "Excluir desafio pelo id",
+        "tags": [
+          "Goal"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do desafio",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Cadastro excluído",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/goals/u/{user_id}": {
+      "get": {
+        "summary": "Buscar todos os desafios pelo id do usuário",
+        "description": "Buscar todos os desafios pelo id do usuário",
+        "tags": [
+          "Goal"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Goal"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/goals/s/andamento/{user_id}": {
+      "get": {
+        "summary": "Buscar os desafios em andamento pelo id do usuário",
+        "description": "Buscar os desafios em andamento pelo id do usuário",
+        "tags": [
+          "Goal"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Goal"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/books": {
+      "post": {
+        "summary": "Criar um livro",
+        "description": "Criar um livro",
+        "tags": [
+          "Book"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Book"
+              },
+              "examples": {
+                "book": {
+                  "value": {
+                    "title": "livro teste",
+                    "subtitle": null,
+                    "publisher": "Seguinte",
+                    "isbn_13": "9789999999999",
+                    "pages": 288,
+                    "release_dt": "2016-04-13 17:08:57.690 +00:00",
+                    "description": null,
+                    "thumbnail": "/./assets/images/noImage.png",
+                    "authors": [
+                      {
+                        "id": null,
+                        "name": "Graciliano Ramos"
+                      }
+                    ],
+                    "themes": [
+                      {
+                        "id": null,
+                        "name": "Ficção"
+                      },
+                      {
+                        "id": null,
+                        "name": "Clássico"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "subtitle": {
+                      "type": "string"
+                    },
+                    "publisher": {
+                      "type": "string"
+                    },
+                    "isbn_13": {
+                      "type": "number"
+                    },
+                    "pages": {
+                      "type": "number"
+                    },
+                    "release_dt": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "thumbnail": {
+                      "type": "string"
+                    },
+                    "authors": {
+                      "type": "array"
+                    },
+                    "themes": {
+                      "type": "array"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado"
+          },
+          "401": {
+            "description": "Falha ao autenticar o usuário"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar o registro de livro",
+        "description": "Atualizar o registro de livro",
+        "tags": [
+          "Book"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Book"
+              },
+              "examples": {
+                "book1": {
+                  "value": {
+                    "id": "4ab3a045-6fbb-4cab-b66e-8f9465078390",
+                    "title": "livro teste2",
+                    "subtitle": null,
+                    "publisher": "Seguinte",
+                    "isbn_13": "9789999999999",
+                    "pages": 288,
+                    "release_dt": "2016-04-13 17:08:57.690 +00:00",
+                    "description": null,
+                    "thumbnail": "/./assets/images/noImage.png",
+                    "authors": [
+                      {
+                        "id": null,
+                        "name": "Graciliano Ramos"
+                      }
+                    ],
+                    "themes": [
+                      {
+                        "id": null,
+                        "name": "Ficção"
+                      },
+                      {
+                        "id": null,
+                        "name": "Clássico"
+                      }
+                    ]
+                  }
+                },
+                "book2": {
+                  "value": {
+                    "id": "4ab3a045-6fbb-4cab-b66e-8f9465078390",
+                    "title": "livro teste3",
+                    "subtitle": null,
+                    "publisher": "Seguinte",
+                    "isbn_13": "9789999999999",
+                    "pages": 288,
+                    "release_dt": "2016-04-13 17:08:57.690 +00:00",
+                    "description": null,
+                    "thumbnail": "/./assets/images/noImage.png",
+                    "authors": [
+                      {
+                        "id": null,
+                        "name": "Graciliano Ramos"
+                      }
+                    ],
+                    "themes": [
+                      {
+                        "id": null,
+                        "name": "Ficção"
+                      },
+                      {
+                        "id": null,
+                        "name": "Clássico"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "target": {
+                      "type": "number"
+                    },
+                    "amount": {
+                      "type": "number"
+                    },
+                    "date_start": {
+                      "type": "string"
+                    },
+                    "date_end": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "number"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado ou Cadastro incorreto"
+          },
+          "401": {
+            "description": "Falha de autenticação"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/books/{id}": {
+      "get": {
+        "summary": "Buscar livro pelo id",
+        "description": "Buscar livro pelo id",
+        "tags": [
+          "Book"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do livro",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Book"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/books/{user_id}": {
+      "get": {
+        "summary": "Buscar livros do usuário pelo id do usuário",
+        "description": "Buscar livros do usuário pelo id do usuário",
+        "tags": [
+          "Book"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "book": {
+                        "$ref": "#/components/schemas/Book"
+                      },
+                      "annotation": {
+                        "$ref": "#/components/schemas/Annotation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/books/{id}/u/{user_id}": {
+      "get": {
+        "summary": "Buscar livro com a anotação pelo id do usuário e id do livro",
+        "description": "Buscar livro pelo id do livro e retorna a anotação se caso existir pelo id do usuário",
+        "tags": [
+          "Book"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do livro",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "book": {
+                        "$ref": "#/components/schemas/Book"
+                      },
+                      "annotation": {
+                        "$ref": "#/components/schemas/Annotation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/books/title/t": {
+      "get": {
+        "summary": "Buscar livros pelo título e id do usuário",
+        "description": "Buscar livros pelo título e retornar a anotação se caso houver",
+        "tags": [
+          "Book"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "t",
+            "in": "query",
+            "description": "Título do livro",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "u",
+            "in": "query",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "book": {
+                        "$ref": "#/components/schemas/Book"
+                      },
+                      "annotation": {
+                        "$ref": "#/components/schemas/Annotation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/annotations": {
+      "post": {
+        "summary": "Criar uma anotação",
+        "description": "Criar uma anotação",
+        "tags": [
+          "Annotation"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Annotation"
+              },
+              "examples": {
+                "book": {
+                  "value": {
+                    "user_id": "32c10701-4b88-4808-87b5-03428049aea4",
+                    "book_id": "c07e72e8-49f6-468b-abd1-aaabc110b25d",
+                    "pages_read": 10,
+                    "progress": 1,
+                    "rating": 2,
+                    "review": "teste teste",
+                    "date_start": "2023-10-13T12:45:12.129Z",
+                    "date_end": "2023-10-13T12:45:12.129Z",
+                    "favorite": 0,
+                    "tags": [
+                      {
+                        "id": null,
+                        "name": "Ameei"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "subtitle": {
+                      "type": "string"
+                    },
+                    "publisher": {
+                      "type": "string"
+                    },
+                    "isbn_13": {
+                      "type": "number"
+                    },
+                    "pages": {
+                      "type": "number"
+                    },
+                    "release_dt": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "thumbnail": {
+                      "type": "string"
+                    },
+                    "authors": {
+                      "type": "array"
+                    },
+                    "themes": {
+                      "type": "array"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado"
+          },
+          "401": {
+            "description": "Falha ao autenticar o usuário"
+          },
+          "404": {
+            "description": "Usuário não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar o registro de anotação",
+        "description": "Atualizar o registro de anotação",
+        "tags": [
+          "Annotation"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Annotation"
+              },
+              "examples": {
+                "annotation1": {
+                  "value": {
+                    "id": "1ee0777c-48be-44d8-b2be-7df76f9c79e7",
+                    "user_id": "32c10701-4b88-4808-87b5-03428049aea4",
+                    "book_id": "c07e72e8-49f6-468b-abd1-aaabc110b25d",
+                    "pages_read": 10,
+                    "progress": 1,
+                    "rating": 4,
+                    "review": "teste teste",
+                    "date_start": "2023-10-13T12:45:12.129Z",
+                    "date_end": "2023-10-13T12:45:12.129Z",
+                    "favorite": 0,
+                    "tags": [
+                      {
+                        "id": null,
+                        "name": "Ameei"
+                      }
+                    ]
+                  }
+                },
+                "annotation2": {
+                  "value": {
+                    "id": "1ee0777c-48be-44d8-b2be-7df76f9c79e7",
+                    "user_id": "32c10701-4b88-4808-87b5-03428049aea4",
+                    "book_id": "c07e72e8-49f6-468b-abd1-aaabc110b25d",
+                    "pages_read": 10,
+                    "progress": 1,
+                    "rating": 2,
+                    "review": "teste teste",
+                    "date_start": "2023-10-13T12:45:12.129Z",
+                    "date_end": "2023-10-13T12:45:12.129Z",
+                    "favorite": 0,
+                    "tags": [
+                      {
+                        "id": null,
+                        "name": "Ameei"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "book_id": {
+                      "type": "string"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "pages_read": {
+                      "type": "number"
+                    },
+                    "progress": {
+                      "type": "number"
+                    },
+                    "rating": {
+                      "type": "number"
+                    },
+                    "date_start": {
+                      "type": "string"
+                    },
+                    "date_end": {
+                      "type": "string"
+                    },
+                    "favorite": {
+                      "type": "number"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado ou Cadastro incorreto"
+          },
+          "401": {
+            "description": "Falha de autenticação"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/annotations/finished/{user_id}": {
+      "get": {
+        "summary": "Buscar livros com a leitura concluída do usuário pelo id do usuário",
+        "description": "Buscar livros com a leitura concluída do usuário pelo id do usuário",
+        "tags": [
+          "Annotation"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "book": {
+                        "$ref": "#/components/schemas/Book"
+                      },
+                      "annotation": {
+                        "$ref": "#/components/schemas/Annotation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/annotations/favorite/{user_id}": {
+      "get": {
+        "summary": "Buscar livros favoritos do usuário pelo id do usuário",
+        "description": "Buscar livros favoritos do usuário pelo id do usuário",
+        "tags": [
+          "Annotation"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "book": {
+                        "$ref": "#/components/schemas/Book"
+                      },
+                      "annotation": {
+                        "$ref": "#/components/schemas/Annotation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
           }
         }
       }
@@ -759,6 +2431,147 @@
             "type": "string"
           },
           "url": {
+            "type": "string"
+          }
+        }
+      },
+      "Role": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array"
+          }
+        }
+      },
+      "Goal": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "target": {
+            "type": "number"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "date_start": {
+            "type": "string"
+          },
+          "date_end": {
+            "type": "string"
+          },
+          "status": {
+            "type": "number"
+          },
+          "user_id": {
+            "type": "string"
+          }
+        }
+      },
+      "Book": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "subtitle": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          },
+          "isbn_13": {
+            "type": "number"
+          },
+          "pages": {
+            "type": "number"
+          },
+          "release_dt": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "thumbnail": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Author"
+            }
+          },
+          "themes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Theme"
+            }
+          }
+        }
+      },
+      "Annotation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "book_id": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "pages_read": {
+            "type": "number"
+          },
+          "progress": {
+            "type": "number"
+          },
+          "rating": {
+            "type": "number"
+          },
+          "date_start": {
+            "type": "string"
+          },
+          "date_end": {
+            "type": "string"
+          },
+          "favorite": {
+            "type": "number"
+          }
+        }
+      },
+      "Author": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Theme": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
             "type": "string"
           }
         }

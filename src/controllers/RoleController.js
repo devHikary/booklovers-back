@@ -5,7 +5,9 @@ const crypto = require("crypto");
 module.exports = {
   async getAll(req, res) {
     try {
-      const role = await Role.findAll();
+      const role = await Role.findAll({
+        attributes: ["id", "name"],
+      });
 
       return res.json(role);
     } catch (error) {
@@ -16,6 +18,11 @@ module.exports = {
   async getById(req, res) {
     try {
       const { id } = req.params;
+
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const role = await Role.findByPk(id, {
         attributes: ["id", "name"],
         include: [
@@ -58,7 +65,7 @@ module.exports = {
         role = await Role.create({ id, name });
         for (const perm of permissions) {
           p = await Permission.findByPk(perm).catch(() => {
-            return res.status(400).json({ error: "Permission not found" });
+            return res.status(404).json({ error: "Permissão não encontrada" });
           });
           const result = await p.addRole(role);
         }
@@ -74,6 +81,10 @@ module.exports = {
     try {
       const { id, name, permissions } = req.body;
 
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const name_aux = await Role.findOne({
         where: {
           name: name,
@@ -83,8 +94,8 @@ module.exports = {
       if (name_aux && id != name_aux.id)
         return res.status(400).json({ error: "Registro duplicado" });
 
-      const role = await Role.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+      const role = await Role.findByPk(id,  {attributes: ["id", "name"]}).catch((err) => {
+        return res.status(400).json({ error: "Registro não encontrado" });
       });
 
       await role.update({ id, name });
@@ -100,6 +111,10 @@ module.exports = {
   async delete(req, res) {
     try {
       const { id } = req.params;
+
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const role = await Role.findByPk(id).catch((err) => {
         return res.status(404).json({ error: "Registro não existe" });

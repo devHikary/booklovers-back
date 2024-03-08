@@ -11,16 +11,21 @@ const statusGoal = {
   EM_ANDAMENTO: 0,
   N_INICIADO: 1,
   CONCLUÍDO: 2,
-  EXPIRADO: 3
-}
+  EXPIRADO: 3,
+};
 
 module.exports = {
   async getAll(req, res) {
     try {
       const { user_id } = req.params;
+
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const goals = await Goal.findAll({
         where: { user_id: user_id },
-        order: [['status', 'ASC']]
+        order: [["status", "ASC"]],
       });
 
       if (goals.length > 0) {
@@ -29,40 +34,58 @@ module.exports = {
             where: [
               { user_id: user_id },
               {
-                date_end: { [Op.and]: [{ [Op.gte]: goal.date_start }, {[Op.lte]: goal.date_end}] },
+                date_end: {
+                  [Op.and]: [
+                    { [Op.gte]: goal.date_start },
+                    { [Op.lte]: goal.date_end },
+                  ],
+                },
               },
             ],
           });
 
-          if(goal.status == statusGoal.CONCLUÍDO){
+          if (goal.status == statusGoal.CONCLUÍDO) {
             goal.status = statusGoal.CONCLUÍDO;
-          }  else if((TODAY_START >= goal.date_start) && (TODAY_START <= goal.date_end) && (goal.amount >= goal.target)){
+          } else if (
+            TODAY_START >= goal.date_start &&
+            TODAY_START <= goal.date_end &&
+            goal.amount >= goal.target
+          ) {
             goal.status = statusGoal.CONCLUÍDO;
-          } else if((TODAY_START >= goal.date_start) && (TODAY_START <= goal.date_end)){
+          } else if (
+            TODAY_START >= goal.date_start &&
+            TODAY_START <= goal.date_end
+          ) {
             goal.status = statusGoal.EM_ANDAMENTO;
-          } else if(TODAY_START < goal.date_start){
+          } else if (TODAY_START < goal.date_start) {
             goal.status = statusGoal.N_INICIADO;
-          } else{
-            goal.status = statusGoal.EXPIRADO
+          } else {
+            goal.status = statusGoal.EXPIRADO;
           }
 
           goal.amount = book.length;
           await goal.update({ amount: book.length, status: goal.status });
         }
-
       }
 
       return res.json(goals);
     } catch (err) {
-      console.log(err)
-      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+      console.log(err);
+      return res
+        .status(500)
+        .json({ error: "Erro no servidor! Tente mais tarde" });
     }
   },
 
   async getById(req, res) {
     try {
       const { id } = req.params;
-      const goal = await Goal.findByPk(id);
+
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
+      const goal = await Goal.findByPk(id,{ attributes: ["id", "name", "target", "amount", "date_start", "date_end", "status", "user_id"]});
 
       return res.json(goal);
     } catch (err) {
@@ -72,23 +95,34 @@ module.exports = {
 
   async getAndamento(req, res) {
     try {
-      const {user_id} = req.params;
+      const { user_id } = req.params;
       const books = [];
 
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const goals = await Goal.findAll({
-        where:{[Op.and]: [{user_id: user_id},{status: statusGoal.EM_ANDAMENTO}]}
+        where: {
+          [Op.and]: [{ user_id: user_id }, { status: statusGoal.EM_ANDAMENTO }],
+        },
       });
       if (goals.length > 0) {
         for (let goal of goals) {
           const book = await Annotation.findAll({
-            attributes:["id"],
+            attributes: ["id"],
             where: [
               { user_id: user_id },
               {
-                date_end: { [Op.and]: [{ [Op.gte]: goal.date_start }, {[Op.lte]: goal.date_end}] },
+                date_end: {
+                  [Op.and]: [
+                    { [Op.gte]: goal.date_start },
+                    { [Op.lte]: goal.date_end },
+                  ],
+                },
               },
             ],
-            include:{
+            include: {
               model: Book,
               attributes: ["thumbnail"],
               // through: {
@@ -96,18 +130,25 @@ module.exports = {
               // },
             },
           });
-          books.push(book)
+          books.push(book);
 
-          if(goal.status == statusGoal.CONCLUÍDO){
+          if (goal.status == statusGoal.CONCLUÍDO) {
             goal.status = statusGoal.CONCLUÍDO;
-          }  else if((TODAY_START >= goal.date_start) && (TODAY_START <= goal.date_end) && (goal.amount >= goal.target)){
+          } else if (
+            TODAY_START >= goal.date_start &&
+            TODAY_START <= goal.date_end &&
+            goal.amount >= goal.target
+          ) {
             goal.status = statusGoal.CONCLUÍDO;
-          } else if((TODAY_START >= goal.date_start) && (TODAY_START <= goal.date_end)){
+          } else if (
+            TODAY_START >= goal.date_start &&
+            TODAY_START <= goal.date_end
+          ) {
             goal.status = statusGoal.EM_ANDAMENTO;
-          } else if(TODAY_START < goal.date_start){
+          } else if (TODAY_START < goal.date_start) {
             goal.status = statusGoal.N_INICIADO;
-          } else{
-            goal.status = statusGoal.EXPIRADO
+          } else {
+            goal.status = statusGoal.EXPIRADO;
           }
 
           goal.amount = book.length;
@@ -115,25 +156,34 @@ module.exports = {
         }
       }
 
-      return res.json({goals, books});
+      return res.json({ goals, books });
     } catch (err) {
-      console.log(err)
-      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+      console.log(err);
+      return res
+        .status(500)
+        .json({ error: "Erro no servidor! Tente mais tarde" });
     }
   },
 
   async deleteById(req, res) {
     try {
       const { id } = req.params;
-      const goal =  await Goal.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
+      const goal = await Goal.findByPk(id).catch((err) => {
+        return res.status(400).json({ error: "Registro não encontrado" });
       });
 
       await goal.destroy();
 
       return res.json({ msg: "Registro excluído" });
     } catch (err) {
-      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+      return res
+        .status(500)
+        .json({ error: "Erro no servidor! Tente mais tarde" });
     }
   },
 
@@ -156,7 +206,7 @@ module.exports = {
       const user = await User.findByPk(user_id);
 
       if (!user) {
-        return res.status(400).json({ error: "Usuário inválido" });
+        return res.status(404).json({ error: "Usuário não encontrado" });
       }
 
       const goal = await Goal.create({
@@ -173,14 +223,28 @@ module.exports = {
       return res.json(goal);
     } catch (err) {
       console.log(err);
-      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+      return res
+        .status(500)
+        .json({ error: "Erro no servidor! Tente mais tarde" });
     }
   },
 
   async update(req, res) {
     try {
-      const { id, user_id, name, target, amount, date_start, date_end, status } =
-        req.body;
+      const {
+        id,
+        user_id,
+        name,
+        target,
+        amount,
+        date_start,
+        date_end,
+        status,
+      } = req.body;
+
+      if (id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const name_aux = await Goal.findOne({
         where: {
@@ -195,11 +259,11 @@ module.exports = {
       const user = await User.findByPk(user_id);
 
       if (!user) {
-        return res.status(400).json({ error: "Usuário inválido" });
+        return res.status(404).json({ error: "Usuário não encontrado" });
       }
 
       const goal = await Goal.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+        return res.status(404).json({ error: "Registro não encontrado" });
       });
 
       await goal.update({
@@ -214,32 +278,43 @@ module.exports = {
       return res.json(goal);
     } catch (err) {
       console.log(err);
-      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+      return res
+        .status(500)
+        .json({ error: "Erro no servidor! Tente mais tarde" });
     }
   },
 };
 
-async function updateAmount(goals, user_id){
+async function updateAmount(goals, user_id) {
   for (let goal of goals) {
     const book = await Annotation.findAll({
       where: [
         { user_id: user_id },
         {
-          date_end: { [Op.and]: [{ [Op.gte]: goal.date_start }, {[Op.lte]: goal.date_end}] },
+          date_end: {
+            [Op.and]: [
+              { [Op.gte]: goal.date_start },
+              { [Op.lte]: goal.date_end },
+            ],
+          },
         },
       ],
     });
 
-    if(goal.status == statusGoal.CONCLUÍDO){
+    if (goal.status == statusGoal.CONCLUÍDO) {
       goal.status = statusGoal.CONCLUÍDO;
-    }  else if((TODAY_START >= goal.date_start) && (TODAY_START <= goal.date_end) && (goal.amount >= goal.target)){
+    } else if (
+      TODAY_START >= goal.date_start &&
+      TODAY_START <= goal.date_end &&
+      goal.amount >= goal.target
+    ) {
       goal.status = statusGoal.CONCLUÍDO;
-    } else if((TODAY_START >= goal.date_start) && (TODAY_START <= goal.date_end)){
+    } else if (TODAY_START >= goal.date_start && TODAY_START <= goal.date_end) {
       goal.status = statusGoal.EM_ANDAMENTO;
-    } else if(TODAY_START < goal.date_start){
+    } else if (TODAY_START < goal.date_start) {
       goal.status = statusGoal.N_INICIADO;
-    } else{
-      goal.status = statusGoal.EXPIRADO
+    } else {
+      goal.status = statusGoal.EXPIRADO;
     }
 
     goal.amount = book.length;

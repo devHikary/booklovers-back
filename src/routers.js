@@ -31,23 +31,23 @@ routes.get('/permissions', middlewares.verifyToken, PermissionController.getAll)
 routes.get('/permissions/:id', middlewares.verifyToken, PermissionController.getById);
 routes.delete('/permissions/:id', middlewares.verifyToken, PermissionController.delete);
 
+routes.post('/roles', middlewares.verifyToken, RoleController.create); 
+routes.put('/roles', middlewares.verifyToken, RoleController.update);
 routes.get('/roles', middlewares.verifyToken, RoleController.getAll);
 routes.get('/roles/:id', middlewares.verifyToken, RoleController.getById);
-routes.post('/roles', middlewares.verifyToken, RoleController.create);
-routes.put('/roles', middlewares.verifyToken, RoleController.update);
 routes.delete('/roles/:id', middlewares.verifyToken, RoleController.delete);
 
-routes.get('/goals/u/:user_id', middlewares.verifyToken, GoalController.getAll);
-routes.get('/goals/:id', middlewares.verifyToken, GoalController.getById);
-routes.get('/goals/s/andamento/:user_id', middlewares.verifyToken, GoalController.getAndamento);
 routes.post('/goals', middlewares.verifyToken, GoalController.create);
 routes.put('/goals', middlewares.verifyToken, GoalController.update);
+routes.get('/goals/:id', middlewares.verifyToken, GoalController.getById);
 routes.delete('/goals/:id', middlewares.verifyToken, GoalController.deleteById);
+routes.get('/goals/u/:user_id', middlewares.verifyToken, GoalController.getAll);
+routes.get('/goals/s/andamento/:user_id', middlewares.verifyToken, GoalController.getAndamento);
 
-routes.get('/books/:user_id', middlewares.verifyToken, BookController.getAll);
 routes.post('/books',middlewares.verifyToken,  BookController.create);
 routes.put('/books', middlewares.verifyToken, BookController.update);
 routes.get('/books/id/:id', middlewares.verifyToken, BookController.getById);
+routes.get('/books/:user_id', middlewares.verifyToken, BookController.getAll);
 routes.get('/books/:id/u/:user_id', middlewares.verifyToken, BookController.getByIdUser);
 routes.get('/books/title/t', middlewares.verifyToken, BookController.getByTitle);
 
