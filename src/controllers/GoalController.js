@@ -44,7 +44,9 @@ module.exports = {
             ],
           });
 
-          if (goal.status == statusGoal.CONCLUÍDO) {
+          if (goal.status == statusGoal.EXPIRADO) {
+            goal.status = statusGoal.EXPIRADO;
+          }else if (goal.status == statusGoal.CONCLUÍDO) {
             goal.status = statusGoal.CONCLUÍDO;
           } else if (
             TODAY_START >= goal.date_start &&
@@ -63,8 +65,12 @@ module.exports = {
             goal.status = statusGoal.EXPIRADO;
           }
 
-          goal.amount = book.length;
-          await goal.update({ amount: book.length, status: goal.status });
+
+          if(!(goal.status == statusGoal.CONCLUÍDO || goal.status == statusGoal.EXPIRADO)){
+            await goal.update({ amount: book.length, status: goal.status });
+
+          }
+
         }
       }
 
@@ -132,7 +138,10 @@ module.exports = {
           });
           books.push(book);
 
-          if (goal.status == statusGoal.CONCLUÍDO) {
+          
+          if (goal.status == statusGoal.EXPIRADO) {
+            goal.status = statusGoal.EXPIRADO;
+          }else if (goal.status == statusGoal.CONCLUÍDO) {
             goal.status = statusGoal.CONCLUÍDO;
           } else if (
             TODAY_START >= goal.date_start &&
@@ -151,8 +160,10 @@ module.exports = {
             goal.status = statusGoal.EXPIRADO;
           }
 
-          goal.amount = book.length;
-          await goal.update({ amount: book.length, status: goal.status });
+          if(!(goal.status == statusGoal.CONCLUÍDO || goal.status == statusGoal.EXPIRADO)){
+            await goal.update({ amount: book.length, status: goal.status });
+
+          }
         }
       }
 
