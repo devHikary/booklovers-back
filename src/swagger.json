@@ -177,10 +177,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "users": {
-                      "type": "string"
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "name": "username"
                     }
                   }
                 }
@@ -1083,7 +1083,7 @@
             "description": "Registro duplicado"
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "Registro não encontrado"
           },
           "403": {
             "description": "Não foi inserido o token"
@@ -1548,7 +1548,7 @@
             "description": "Falha ao autenticar o usuário"
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "Registro não encontrado"
           },
           "403": {
             "description": "Não foi inserido o token"
@@ -2092,7 +2092,7 @@
             "description": "Falha ao autenticar o usuário"
           },
           "404": {
-            "description": "Usuário não encontrado"
+            "description": "Registro não encontrado"
           },
           "403": {
             "description": "Não foi inserido o token"
@@ -2680,6 +2680,246 @@
           }
         }
       }
+    },
+    "/tags": {
+      "get": {
+        "summary": "Buscar todas as tags",
+        "description": "Buscar todas as tags",
+        "tags": [
+          "Tag"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar uma tag",
+        "description": "Criar uma tag",
+        "tags": [
+          "Tag"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tag"
+              },
+              "examples": {
+                "tag": {
+                  "value": {
+                    "name": "tag teste",
+                    "user_id": "32c10701-4b88-4808-87b5-03428049aea4"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado"
+          },
+          "401": {
+            "description": "Falha ao autenticar o usuário"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar o registro de tag",
+        "description": "Atualizar o registro de tag",
+        "tags": [
+          "Tag"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tag"
+              },
+              "examples": {
+                "tag1": {
+                  "value": {
+                    "id": "6b51c53a-c6c5-46ca-aaa3-05d5c6763280",
+                    "name": "tag teste2",
+                    "user_id": "32c10701-4b88-4808-87b5-03428049aea4"
+                  }
+                },
+                "tag2": {
+                  "value": {
+                    "id": "6b51c53a-c6c5-46ca-aaa3-05d5c6763280",
+                    "name": "tag teste3",
+                    "user_id": "32c10701-4b88-4808-87b5-03428049aea4"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "user_id": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado ou Cadastro incorreto"
+          },
+          "401": {
+            "description": "Falha de autenticação"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/tags/{id}": {
+      "delete": {
+        "summary": "Excluir desafio pelo id",
+        "description": "Excluir desafio pelo id",
+        "tags": [
+          "Goal"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do desafio",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Cadastro excluído",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2877,6 +3117,17 @@
         }
       },
       "Theme": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Tag": {
         "type": "object",
         "properties": {
           "id": {

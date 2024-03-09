@@ -10,7 +10,9 @@ const { Op } = require("sequelize");
 module.exports = {
   async getAll(req, res) {
     try {
-      const tags = await Tag.findAll();
+      const tags = await Tag.findAll({
+        attributes: ["id", "name"],
+      });
 
       return res.json(tags);
     } catch (err) {
@@ -38,6 +40,16 @@ module.exports = {
 
       const id = crypto.randomUUID();
 
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
+      const user = await User.findByPk(user_id);
+
+      if (!user) {
+        return res.status(400).json({ error: "Usuário inválido" });
+      }
+
       const name_aux = await Tag.findOne({
         where: {
           name: name,
@@ -46,12 +58,6 @@ module.exports = {
 
       if (name_aux)
         return res.status(400).json({ error: "Registro duplicado" });
-
-      const user = await User.findByPk(user_id);
-
-      if (!user) {
-        return res.status(400).json({ error: "Usuário inválido" });
-      }
 
       const tag = await Tag.create({
         id,
@@ -139,6 +145,10 @@ module.exports = {
   async update(req, res) {
     try {
       const { id, name, user_id } = req.body;
+
+      if(user_id.length != 36 || id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const name_aux = await Tag.findOne({
         where: {
