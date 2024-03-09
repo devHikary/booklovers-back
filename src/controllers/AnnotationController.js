@@ -657,4 +657,76 @@ module.exports = {
       return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
     }
   },
+
+  async getAllByTag(req, res) {
+    try {
+      const { id, user_id } = req.query;
+      let result = [];
+
+      if(user_id.length != 36 || id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
+      const annotations = await Annotation.findAll({
+        attributes: [
+          "id",
+          "pages_read",
+          "progress",
+          "rating",
+          "review",
+          "date_start",
+          "date_end",
+          "favorite",
+          "book_id"
+        ],
+        where: {
+          user_id: user_id,
+        },
+        include: [
+          {
+            association: 'tags',
+            where: {
+              id: id,
+            },
+            attributes: ["id", "name"],
+            through: {
+              attributes: [],
+            },
+          },
+        ],
+      });
+      
+      if (annotations.length > 0) {
+        for (let annotation of annotations) {
+
+          const book = await Book.findByPk( annotation.book_id,{
+            include: [
+              {
+                model: Author,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+              {
+                model: Theme,
+                attributes: ["id", "name"],
+                through: {
+                  attributes: [],
+                },
+              },
+            ],
+          });
+
+          if(book)
+            result.push({book: book, annotation: annotation})
+        }
+      }
+
+      return res.json(result);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ error: 'Erro no servidor! Tente mais tarde' });
+    }
+  },
 };

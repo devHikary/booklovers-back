@@ -180,7 +180,9 @@
                   "type": "array",
                   "items": {
                     "properties": {
-                      "name": "username"
+                      "name": {
+                        "type": "string"
+                      }
                     }
                   }
                 }
@@ -2523,8 +2525,8 @@
     },
     "/annotations/theme": {
       "get": {
-        "summary": "Buscar livros do usuário pelo id do gênero e anotação",
-        "description": "Buscar livros do usuário pelo id do gênero e anotação se caso houver",
+        "summary": "Buscar livros do usuário e a anotação filtrado pelo id do gênero",
+        "description": "Buscar livros do usuário e a anotação filtrado pelo id do gênero",
         "tags": [
           "Annotation"
         ],
@@ -2603,8 +2605,8 @@
     },
     "/annotations/author": {
       "get": {
-        "summary": "Buscar livros do usuário pelo id do autor e a anotação",
-        "description": "Buscar livros do usuário pelo id do autor e a anotação se caso houver",
+        "summary": "Buscar livros do usuário e a anotação filtrado pelo id do autor",
+        "description": "Buscar livros do usuário e a anotação filtrado pelo id do autor",
         "tags": [
           "Annotation"
         ],
@@ -2627,6 +2629,86 @@
             "name": "id",
             "in": "query",
             "description": "ID do autor",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "book": {
+                        "$ref": "#/components/schemas/Book"
+                      },
+                      "annotation": {
+                        "$ref": "#/components/schemas/Annotation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/annotations/tag": {
+      "get": {
+        "summary": "Buscar livros do usuário e a anotação filtrado pelo id da tag",
+        "description": "Buscar livros do usuário e a anotação filtrado pelo id da tag",
+        "tags": [
+          "Annotation"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID do tag",
             "required": true,
             "schema": {
               "type": "string"
@@ -2872,10 +2954,10 @@
     },
     "/tags/{id}": {
       "delete": {
-        "summary": "Excluir desafio pelo id",
-        "description": "Excluir desafio pelo id",
+        "summary": "Excluir tag pelo id",
+        "description": "Excluir tag pelo id",
         "tags": [
-          "Goal"
+          "Tag"
         ],
         "security": [
           {
@@ -2886,7 +2968,7 @@
           {
             "name": "id",
             "in": "path",
-            "description": "ID do desafio",
+            "description": "ID da tag",
             "required": true,
             "schema": {
               "type": "string"
@@ -2911,6 +2993,70 @@
           },
           "404": {
             "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/tags/user/{user_id}": {
+      "get": {
+        "summary": "Buscar todos os registros de tags pelo id do usuário",
+        "description": "Buscar todos os registros de tags que foram criadas pelo usuário usando id do usuário",
+        "tags": [
+          "Tag"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Tag"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
           },
           "403": {
             "description": "Não foi inserido o token"
@@ -3102,6 +3248,12 @@
           },
           "favorite": {
             "type": "number"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
           }
         }
       },

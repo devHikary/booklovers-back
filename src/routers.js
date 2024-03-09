@@ -60,13 +60,13 @@ routes.get('/annotations/reading/:user_id', AnnotationController.getReading);
 routes.get('/annotations/rating', AnnotationController.getRating);
 routes.get('/annotations/theme', AnnotationController.getAllByTheme);
 routes.get('/annotations/author', AnnotationController.getAllByAuthor);
+routes.get('/annotations/tag', AnnotationController.getAllByTag);
 
 routes.get('/tags', middlewares.verifyToken, TagController.getAll);
 routes.post('/tags', middlewares.verifyToken, TagController.create);
 routes.put('/tags', middlewares.verifyToken, TagController.update);
-routes.get('/tags/user/:user_id', middlewares.verifyToken, TagController.getAllUser);
 routes.delete('/tags/:id', middlewares.verifyToken, TagController.delete);
-routes.get('/tags/:id/u/:user_id', middlewares.verifyToken, TagController.getById);
+routes.get('/tags/user/:user_id', middlewares.verifyToken, TagController.getAllUser);
 
 routes.get('/authors', middlewares.verifyToken, AuthorController.getAll);
 routes.post('/authors', middlewares.verifyToken, AuthorController.create);

@@ -24,8 +24,13 @@ module.exports = {
     try {
       const { user_id } = req.params;
 
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const tags = await Tag.findAll({
         where: { user_id: user_id },
+        attributes: ["id", "name"],
       });
 
       return res.json(tags);
@@ -179,6 +184,9 @@ module.exports = {
     try {
       const { id } = req.params;
 
+      if(id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const tag = await Tag.findByPk(id).catch((err) => {
         return res.status(404).json({ error: "Registro não existe" });
