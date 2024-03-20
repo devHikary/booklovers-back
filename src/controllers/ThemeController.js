@@ -54,6 +54,10 @@ module.exports = {
       const { id, user_id } = req.query;
       let result = [];
 
+      if(user_id.length != 36 || id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const books = await Book.findAll({
         include: [
           {
@@ -111,7 +115,13 @@ module.exports = {
   async getById(req, res) {
     try {
       const { id } = req.params;
-      const theme = await Theme.findByPk(id);
+
+      if(id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
+      const theme = await Theme.findByPk(id,
+        {attributes: ["id", "name"]});
 
       return res.json(theme);
     } catch (error) {
@@ -123,6 +133,10 @@ module.exports = {
   async update(req, res) {
     try {
       const { id, name } = req.body;
+
+      if(id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const name_aux = await Theme.findOne({
         where: {
@@ -150,6 +164,9 @@ module.exports = {
     try {
       const { id } = req.params;
 
+      if(id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const theme = await Theme.findByPk(id).catch((err) => {
         return res.status(400).json({ error: "Registro não existe" });

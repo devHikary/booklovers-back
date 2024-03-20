@@ -50,7 +50,6 @@ module.exports = {
       const { id, user_id } = req.query;
       let result = [];
 
-      console.log(id)
       const books = await Book.findAll(
         {
           include: [
@@ -143,7 +142,6 @@ module.exports = {
   async delete(req, res) {
     try {
       const { id } = req.params;
-
 
       const author = await Author.findByPk(id).catch((err) => {
         return res.status(400).json({ error: "Registro não existe" });

@@ -3066,6 +3066,373 @@
           }
         }
       }
+    },
+    "/themes": {
+      "get": {
+        "summary": "Buscar todas os gêneros literários",
+        "description": "Buscar todas os gêneros literários",
+        "tags": [
+          "Theme"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Theme"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "post": {
+        "summary": "Criar um  registro de tema/ gênero literário",
+        "description": "Criar um  registro de tema/ gênero literário",
+        "tags": [
+          "Theme"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tag"
+              },
+              "examples": {
+                "theme": {
+                  "value": {
+                    "name": "theme teste"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado"
+          },
+          "401": {
+            "description": "Falha ao autenticar o usuário"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "put": {
+        "summary": "Atualizar o registro de gênero literário",
+        "description": "Atualizar o registro de gênero literário",
+        "tags": [
+          "Theme"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Theme"
+              },
+              "examples": {
+                "theme1": {
+                  "value": {
+                    "id": "0d1e3f94-7ecd-4524-b40e-c0f7b7a509b1",
+                    "name": "theme teste2"
+                  }
+                },
+                "theme2": {
+                  "value": {
+                    "id": "0d1e3f94-7ecd-4524-b40e-c0f7b7a509b1",
+                    "name": "theme teste3"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Registro duplicado ou Cadastro incorreto"
+          },
+          "401": {
+            "description": "Falha de autenticação"
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/themes/u": {
+      "get": {
+        "summary": "Buscar livros e a anotação filtrado pelo id do gênero literário",
+        "description": "Buscar livros e a anotação (se caso existir) filtrado pelo id do gênero literário",
+        "tags": [
+          "Theme"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "query",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "query",
+            "description": "ID do gênero literário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "book": {
+                        "$ref": "#/components/schemas/Book"
+                      },
+                      "annotation": {
+                        "$ref": "#/components/schemas/Annotation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
+    },
+    "/themes/{id}": {
+      "delete": {
+        "summary": "Excluir registro de gênero literário pelo id",
+        "description": "Excluir registro de gênero literário pelo id",
+        "tags": [
+          "Theme"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do gênero literário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - Cadastro excluído",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Registro não encontrado"
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      },
+      "get": {
+        "summary": "Buscar registro de gênero literário pelo id",
+        "description": "Buscar registro de gênero literário pelo id",
+        "tags": [
+          "Theme"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do gênero literário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Theme"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cadastro incorreto"
+          },
+          "404": {
+            "description": "Registro não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Não foi inserido o token"
+          },
+          "500": {
+            "description": "Erro no servidor ou servidor indisponível"
+          }
+        }
+      }
     }
   },
   "components": {
