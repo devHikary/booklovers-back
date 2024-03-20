@@ -101,6 +101,10 @@ module.exports = {
         return res.status(404).json({ error: "Registro não encontrado" });
       });
 
+      if(permis == null ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       await permis.destroy({ where: {id} });
 
       return res.json({ msg: "Cadastro excluído" });

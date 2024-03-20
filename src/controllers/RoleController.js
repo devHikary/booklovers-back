@@ -120,6 +120,10 @@ module.exports = {
         return res.status(404).json({ error: "Registro não existe" });
       });
 
+      if(role == null ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       await role.destroy({ where: { id } });
 
       return res.json({ msg: "Cadastro excluído" });

@@ -185,8 +185,12 @@ module.exports = {
       }
 
       const goal = await Goal.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não encontrado" });
+        return res.status(404).json({ error: "Registro não encontrado" });
       });
+
+      if(goal == null ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       await goal.destroy();
 

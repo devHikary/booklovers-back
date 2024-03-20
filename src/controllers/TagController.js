@@ -192,6 +192,10 @@ module.exports = {
         return res.status(404).json({ error: "Registro não existe" });
       });
 
+      if(tag == null ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       await tag.destroy({ where: {id} });
 
       return res.json({ msg: "Cadastro excluído" });

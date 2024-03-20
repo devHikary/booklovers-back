@@ -10,6 +10,7 @@ module.exports = {
     try {
       const author = await Author.findAll({
         order: [['name', 'ASC']],
+        attributes: ["id", "name"],
       });
 
       return res.json(author);
@@ -49,6 +50,10 @@ module.exports = {
     try {
       const { id, user_id } = req.query;
       let result = [];
+
+      if(user_id.length != 36 || id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const books = await Book.findAll(
         {
@@ -104,7 +109,12 @@ module.exports = {
   async getById(req, res) {
     try {
       const { id } = req.params;
-      const author = await Author.findByPk(id);
+
+      if(id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+      
+      const author = await Author.findByPk(id,{attributes: ["id", "name"]});
 
       return res.json(author);
     } catch (err) {
@@ -116,6 +126,10 @@ module.exports = {
   async update(req, res) {
     try {
       const { id, name } = req.body;
+
+      if(id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       const name_aux = await Author.findOne({
         where: {
@@ -143,9 +157,17 @@ module.exports = {
     try {
       const { id } = req.params;
 
+      if(id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       const author = await Author.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+        return res.status(404).json({ error: "Registro não existe" });
       });
+
+      if(author == null ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       await author.destroy({ where: {id} });
 

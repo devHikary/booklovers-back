@@ -169,8 +169,12 @@ module.exports = {
       }
 
       const theme = await Theme.findByPk(id).catch((err) => {
-        return res.status(400).json({ error: "Registro não existe" });
+        return res.status(404).json({ error: "Registro não existe" });
       });
+
+      if(theme == null ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       await theme.destroy({ where: {id} });
 

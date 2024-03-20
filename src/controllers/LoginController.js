@@ -55,7 +55,6 @@ module.exports = {
         res.status(500).json({ message: "Login inválido!" });
       }
     } catch (err) {
-      console.log(err.name);
       if( err.name === 'SequelizeConnectionRefusedError'){
         res.status(503).json({ message: 'Erro no servidor! Tente mais tarde'});
       } else{
