@@ -63,10 +63,7 @@ module.exports = {
         });
         if(annotation != null && annotation.date_end == null && annotation.date_start == null && annotation.favorite == 0 && annotation.pages_read == 0 && annotation.progress == 0 && annotation.rating == 0 && annotation.review == ""){
           await annotation.destroy({ where: {id: annotation.id} });
-          annotation = null;
-        }
-
-        if (annotation) result.push({ book: book, annotation: annotation });
+        } else if (annotation) result.push({ book: book, annotation: annotation });
       }
 
       return res.json(result);
