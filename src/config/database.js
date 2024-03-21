@@ -1,15 +1,17 @@
 require('dotenv').config();
 
+let { DIALECT, HOST, DATABASE, USERNAME, PASSWORD, ENDPOINT_ID } = process.env;
+
 module.exports = {
-  dialect: process.env.DIALECT,
-  host: process.env.HOST,
-  username: process.env.USERNAME,
-  password: process.env.PASSWORD,
-  database: process.env.DATABASE,
+  dialect: DIALECT,
+  host: HOST,
+  username: USERNAME,
+  password: PASSWORD,
+  database: DATABASE,
   port: 5432,
   ssl: 'require',
   connection: {
-    options: `project=${process.env.ENDPOINT_ID}`,
+    options: `project=${ENDPOINT_ID}`,
   },
   define: {
     timestamps: true,
