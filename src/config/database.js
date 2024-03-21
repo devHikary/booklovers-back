@@ -1,4 +1,4 @@
-require("dotenv-safe").config();
+require('dotenv').config();
 
 module.exports = {
   dialect: process.env.DIALECT,

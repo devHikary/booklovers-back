@@ -1,5 +1,5 @@
 const User = require("../models/User");
-require("dotenv-safe").config();
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
 const Role = require("../models/Role");
