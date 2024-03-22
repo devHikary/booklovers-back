@@ -7,6 +7,7 @@ const swaggerUi = require('swagger-ui-express')
 const swaggerDocs = require("./swagger.json");
 
 const jwt = require("jsonwebtoken");
+const PORT = process.env.PORT || 5000; 
 
 require("./database");
 
@@ -19,7 +20,7 @@ app.use(express.json());
 app.use(routes);
 
 
-app.listen(3333, (err) => {
+app.listen(PORT, (err) => {
   if (err) {
     console.log(err);
     return res.status(400).json({ error: "Erro no servidor" });
