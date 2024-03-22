@@ -19,7 +19,8 @@ app.use(cors());
 app.use(express.json());
 app.use(routes);
 
+app.get("/", (req, res) => res.send("Express on Vercel"));
 
-app.listen(PORT, () => console.log('Server ready on port ', PORT));
+app.listen(PORT, () => console.log("Server ready on port ",PORT));
 
 module.exports = app;
