@@ -11,7 +11,6 @@ const AuthorController = require('./controllers/AuthorController');
 const ThemeController = require('./controllers/ThemeController');
 const LoginController = require('./controllers/LoginController');
 const middlewares = require('./middleware/middlewares');
-const homeController = require('./controllers/homeController');
 const StatisticController = require('./controllers/StatisticController');
 const ReportFailureController = require('./controllers/ReportFailureController');
 

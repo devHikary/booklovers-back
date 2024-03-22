@@ -1,9 +1,11 @@
 require('dotenv').config();
+const pg = require('pg')
 
 let { DIALECT, HOST, DATABASE, USERNAME, PASSWORD, ENDPOINT_ID } = process.env;
 
 module.exports = {
   dialect: DIALECT,
+  dialectModule: pg, 
   host: HOST,
   username: USERNAME,
   password: PASSWORD,
