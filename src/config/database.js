@@ -9,9 +9,12 @@ module.exports = {
   password: PASSWORD,
   database: DATABASE,
   port: 5432,
-  ssl: 'require',
-  connection: {
-    options: `project=${ENDPOINT_ID}`,
+  dialectOptions: {
+    project: ENDPOINT_ID,
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
   },
   define: {
     timestamps: true,
