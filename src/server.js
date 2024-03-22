@@ -20,9 +20,8 @@ app.use(express.json());
 app.use(routes);
 
 
-app.listen(PORT, (err) => {
-  if (err) {
-    console.log(err);
-    return res.status(400).json({ error: "Erro no servidor" });
-  }
-});
+app.get("/", (req, res) => res.send("Express on Vercel"));
+
+app.listen(3000, () => console.log("Server ready on port 3000."));
+
+module.exports = app;
