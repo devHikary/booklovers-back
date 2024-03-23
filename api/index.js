@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("../src/routers");
+const pathToSwaggerUi = require('swagger-ui-dist').absolutePath()
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.12.0/swagger-ui.min.css";
 require("dotenv").config();
 
 const swaggerUi = require('swagger-ui-express')
@@ -13,7 +15,8 @@ require("../src/database");
 
 const app = express();
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use(express.static(pathToSwaggerUi))
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: CSS_URL }));
 
 app.use(cors());
 app.use(express.json());
