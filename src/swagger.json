@@ -8,6 +8,10 @@
   },
   "servers": [
     {
+      "url": "https://booklovers-back.vercel.app/",
+      "description": "API Bookslovers"
+    },
+    {
       "url": "http://localhost:3333",
       "description": "API de teste"
     }
