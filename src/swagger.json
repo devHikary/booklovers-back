@@ -4,15 +4,15 @@
     "title": "API da aplicação Booklovers",
     "description": "Documentação da API da aplicação Booklovers",
     "termsOfService": "",
-    "version": "0.0.1"
+    "version": "1.0.0"
   },
   "servers": [
     {
-      "url": "https://booklovers-back.vercel.app/",
+      "url": "https://booklovers-back.vercel.app/v1/",
       "description": "API Bookslovers"
     },
     {
-      "url": "http://localhost:3333",
+      "url": "http://localhost:3333/v1/",
       "description": "API de teste"
     }
   ],

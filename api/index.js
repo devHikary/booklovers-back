@@ -16,13 +16,13 @@ require("../src/database");
 const app = express();
 
 app.use(express.static(pathToSwaggerUi))
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: CSS_URL }));
+app.use("/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs, { customCssUrl: CSS_URL }));
 
 app.use(cors());
 app.use(express.json());
-app.use(routes);
+app.use("/v1",routes);
 
-app.get("/", (req, res) => res.send("Express on Vercel"));
+app.get("/", (req, res) => res.send("Express on Vercel, API BookLovers"));
 
 app.listen(PORT, () => console.log("Server ready on port ",PORT));
 

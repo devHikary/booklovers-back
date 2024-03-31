@@ -52,13 +52,13 @@ module.exports = {
         );
         return res.json({ auth: true, token: token });
       } else {
-        res.status(500).json({ message: "Login inválido!" });
+        res.status(401).json({ message: "Login inválido!" });
       }
     } catch (err) {
       if( err.name === 'SequelizeConnectionRefusedError'){
         res.status(503).json({ message: 'Erro no servidor! Tente mais tarde'});
       } else{
-        res.status(500).json({ message: "Atenção! Usuário ou senha incorreta" });
+        res.status(401).json({ message: "Atenção! Usuário ou senha incorreta" });
       }
     }
   },
