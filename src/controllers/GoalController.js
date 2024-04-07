@@ -68,7 +68,10 @@ module.exports = {
 
           if(!(goal.status == statusGoal.CONCLUÍDO || goal.status == statusGoal.EXPIRADO)){
             await goal.update({ amount: book.length, status: goal.status });
-
+          }else if(goal.status == statusGoal.CONCLUÍDO ){
+            await goal.update({status: statusGoal.CONCLUÍDO });
+          } else if(goal.status == statusGoal.EXPIRADO){
+            await goal.update({status: statusGoal.EXPIRADO });
           }
 
         }
@@ -162,7 +165,10 @@ module.exports = {
 
           if(!(goal.status == statusGoal.CONCLUÍDO || goal.status == statusGoal.EXPIRADO)){
             await goal.update({ amount: book.length, status: goal.status });
-
+          } else if(goal.status == statusGoal.CONCLUÍDO ){
+            await goal.update({status: statusGoal.CONCLUÍDO });
+          } else if(goal.status == statusGoal.EXPIRADO){
+            await goal.update({status: statusGoal.EXPIRADO });
           }
         }
       }
