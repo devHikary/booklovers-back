@@ -6,6 +6,7 @@ module.exports = {
     try {
       const report = await ReportFailure.findAll({
         order: [['status', 'ASC']],
+        attributes: ['id','book_id','description', 'status', 'createdAt', 'updatedAt']
       });
   
       return res.json(report);
