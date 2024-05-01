@@ -67,7 +67,7 @@ module.exports = {
       }).catch();
 
       if (username_aux)
-        return res.status(400).json({ error: "Username já cadastrado" });
+        return res.status(400).json({ error: "Nome de usuário já cadastrado" });
 
       const role = await Role.findByPk(role_id);
 
@@ -75,12 +75,15 @@ module.exports = {
         return res.status(400).json({ error: "Perfil inválido" });
       }
 
+      usernameLowerCase = username.toLowerCase();
+      emailLowerCase = email.toLowerCase();
+
       await User.create({
         id,
         role_id,
-        username,
+        username: usernameLowerCase,
         name,
-        email,
+        email: emailLowerCase,
         password,
       }).catch((err) => {
         return res.status(400).json({ error: "Cadastro incorreto" });
@@ -105,7 +108,7 @@ module.exports = {
         console.log(err);
       })
 
-      if (email_aux && email_aux.id != id)
+      if (email_aux && email_aux.email && email_aux.id != id)
         return res.status(400).json({ error: "E-mail já cadastrado" });
 
       const username_aux = await User.findOne({
@@ -116,7 +119,7 @@ module.exports = {
         console.log(err);
       })
 
-        if (username_aux && username_aux.id != id)
+        if (username_aux && username_aux.username && username_aux.id != id)
           return res.status(400).json({ error: "Username já cadastrado" });
 
 
@@ -131,10 +134,14 @@ module.exports = {
       if(user === null) {
         return res.status(400).json({ error: "ID do usuário inválido" });
       }
+
+      usernameLowerCase = username.toLowerCase();
+      emailLowerCase = email.toLowerCase();
+
       await user.update({
-        username,
+        username: usernameLowerCase,
         name,
-        email,
+        email: emailLowerCase,
       }).catch((err) => {
         return res.status(400).json({ error: "Cadastro incorreto" });
       });
