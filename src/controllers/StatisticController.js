@@ -13,6 +13,10 @@ module.exports = {
       const { user_id } = req.params;
       let result = [];
 
+      if(user_id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       let AnnotationByAllMonth = await Annotation.findAll({
         where: {
           [Op.and]: [
@@ -89,6 +93,10 @@ module.exports = {
     try {
       const { user_id } = req.params;
 
+      if(user_id.length != 36) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
+
       let AnnotationByAllYear = await Annotation.findAll({
         where: { user_id: user_id },
         attributes: [
@@ -116,6 +124,10 @@ module.exports = {
     try {
       const rating = req.query.r;
       const user_id = req.query.u;
+
+      if(user_id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       let AnnotationByAllYear = await Annotation.findAll({
         where: { user_id: user_id },
@@ -163,8 +175,11 @@ module.exports = {
 
   async getFavorites(req, res) {
     try {
-      const rating = req.query.r;
       const user_id = req.query.u;
+
+      if(user_id.length != 36 ) {
+        return res.status(404).json({ error: "Registro não encontrado" });
+      }
 
       let AnnotationByFavorite = await Annotation.findAll({
         where: { user_id: user_id, favorite: 1 },
