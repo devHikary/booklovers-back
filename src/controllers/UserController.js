@@ -120,7 +120,7 @@ module.exports = {
       })
 
         if (username_aux && username_aux.username && username_aux.id != id)
-          return res.status(400).json({ error: "Username já cadastrado" });
+          return res.status(400).json({ error: "Usuário já cadastrado" });
 
 
       const role = await Role.findByPk(role_id);

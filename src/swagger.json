@@ -46,7 +46,7 @@
             "description": "OK"
           },
           "400": {
-            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
+            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Usuário já cadastrado ou Perfil inválido"
           },
           "500": {
             "description": "Erro no servidor ou servidor indisponível"
@@ -86,7 +86,7 @@
             "description": "OK"
           },
           "400": {
-            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido"
+            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Usuário já cadastrado ou Perfil inválido"
           },
           "500": {
             "description": "Erro no servidor ou servidor indisponível"
@@ -142,7 +142,7 @@
             }
           },
           "400": {
-            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Username já cadastrado ou Perfil inválido ou ID do usuário inválido",
+            "description": "Alguma informação está incorreta como: E-mail já cadastrado ou Usuário já cadastrado ou Perfil inválido ou ID do usuário inválido",
             "content": {
               "application/json": {
                 "schema": {
@@ -386,7 +386,7 @@
             "description": "OK"
           },
           "400": {
-            "description": "Alguma informação está incorreta como: Senha incorreta ou Username já cadastrado ou Perfil inválido"
+            "description": "Alguma informação está incorreta como: Senha incorreta ou Usuário já cadastrado ou Perfil inválido"
           },
           "500": {
             "description": "Erro no servidor ou servidor indisponível"
