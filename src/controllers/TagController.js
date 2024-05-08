@@ -24,7 +24,7 @@ module.exports = {
     try {
       const { user_id } = req.params;
 
-      if(user_id.length != 36) {
+      if (user_id.length != 36) {
         return res.status(404).json({ error: "Registro não encontrado" });
       }
 
@@ -45,7 +45,7 @@ module.exports = {
 
       const id = crypto.randomUUID();
 
-      if(user_id.length != 36) {
+      if (user_id.length != 36) {
         return res.status(404).json({ error: "Registro não encontrado" });
       }
 
@@ -57,12 +57,15 @@ module.exports = {
 
       const name_aux = await Tag.findOne({
         where: {
-          name: name,
+          [Op.and]: [{ name: name }, { user_id: user_id }],
         },
       });
 
-      if (name_aux)
-        return res.status(400).json({ error: "Registro duplicado" });
+      if (name_aux != null) {
+        if (name_aux.name == name)
+          return res.status(400).json({ error: "Registro duplicado" });
+      }
+
 
       const tag = await Tag.create({
         id,
@@ -112,11 +115,11 @@ module.exports = {
           },
         ],
       });
-      
+
       if (annotations.length > 0) {
         for (let annotation of annotations) {
 
-          const book = await Book.findByPk( annotation.book_id,{
+          const book = await Book.findByPk(annotation.book_id, {
             include: [
               {
                 model: Author,
@@ -135,8 +138,8 @@ module.exports = {
             ],
           });
 
-          if(book)
-            result.push({book: book, annotation: annotation})
+          if (book)
+            result.push({ book: book, annotation: annotation })
         }
       }
 
@@ -151,17 +154,17 @@ module.exports = {
     try {
       const { id, name, user_id } = req.body;
 
-      if(user_id.length != 36 || id.length != 36) {
+      if (user_id.length != 36 || id.length != 36) {
         return res.status(404).json({ error: "Registro não encontrado" });
       }
 
       const name_aux = await Tag.findOne({
         where: {
-          [Op.and]: [{name: name},{ user_id: user_id}]
+          [Op.and]: [{ name: name }, { user_id: user_id }]
           ,
         },
       });
-      
+
       if (name_aux && id != name_aux.id)
         return res.status(400).json({ error: "Registro duplicado" });
 
@@ -184,7 +187,7 @@ module.exports = {
     try {
       const { id } = req.params;
 
-      if(id.length != 36) {
+      if (id.length != 36) {
         return res.status(404).json({ error: "Registro não encontrado" });
       }
 
@@ -192,11 +195,11 @@ module.exports = {
         return res.status(404).json({ error: "Registro não existe" });
       });
 
-      if(tag == null ) {
+      if (tag == null) {
         return res.status(404).json({ error: "Registro não encontrado" });
       }
 
-      await tag.destroy({ where: {id} });
+      await tag.destroy({ where: { id } });
 
       return res.json({ msg: "Cadastro excluído" });
     } catch (err) {
